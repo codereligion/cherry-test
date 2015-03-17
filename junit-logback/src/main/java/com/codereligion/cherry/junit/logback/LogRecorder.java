@@ -18,6 +18,7 @@ package com.codereligion.cherry.junit.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 /**
- * JUnit rule which temporarily adds an in-memory recording appender to the loggers specified by the given {@link
+ * JUnit rule which temporarily adds a {@link ch.qos.logback.core.read.ListAppender} to the loggers specified by the given {@link
  * com.codereligion.cherry.junit.logback.LogSpec}.
  *
  * @author Sebastian Gr&ouml;bler
@@ -38,8 +39,8 @@ import org.junit.runners.model.Statement;
 public class LogRecorder implements TestRule {
 
     /**
-     * Creates a log recorder rule which records events for all logs specified by the given {@link com.codereligion.cherry.junit.logback.LogSpec}.
-     * If the same logger is specified multiple times with a different log level, then the last spec wins.
+     * Creates a log recorder rule which records events for all logs specified by the given {@link com.codereligion.cherry.junit.logback.LogSpec}. If the same
+     * logger is specified multiple times with a different log level, then the last spec wins.
      *
      * @param logSpecs the to be expected logs
      * @return a new {@link com.codereligion.cherry.junit.logback.LogRecorder}
@@ -52,7 +53,7 @@ public class LogRecorder implements TestRule {
     private final Map<Logger, Level> previousLogLevels = new HashMap<Logger, Level>();
 
     @SuppressWarnings("unchecked")
-    private final RecordingAppender recordingAppender = new RecordingAppender();
+    private final ListAppender<ILoggingEvent> listAppender = new ListAppender<ILoggingEvent>();
 
     private LogRecorder(final LogSpec... logSpecs) {
         Collections.addAll(this.logSpecs, logSpecs);
@@ -66,7 +67,7 @@ public class LogRecorder implements TestRule {
      * @return all recorded events
      */
     public List<ILoggingEvent> events() {
-        return recordingAppender.getEvents();
+        return listAppender.list;
     }
 
     /**
@@ -74,11 +75,11 @@ public class LogRecorder implements TestRule {
      * @throws LogRecorderException when no event was recorded
      */
     public ILoggingEvent event() {
-        if (recordingAppender.getEvents().isEmpty()) {
+        if (listAppender.list.isEmpty()) {
             throw new LogRecorderException("No event was recorded during the test execution.");
         }
 
-        return recordingAppender.getEvents().get(0);
+        return listAppender.list.get(0);
     }
 
     private Statement statement(final Statement base) {
@@ -100,15 +101,17 @@ public class LogRecorder implements TestRule {
             final Logger logger = logSpec.getLogger();
             previousLogLevels.put(logger, logger.getLevel());
             logger.setLevel(logSpec.getLevel());
-            logger.addAppender(recordingAppender);
+            logger.addAppender(listAppender);
         }
+        listAppender.start();
     }
 
     private void after() {
+        listAppender.stop();
         for (final LogSpec logSpec : logSpecs) {
             final Logger logger = logSpec.getLogger();
             logger.setLevel(previousLogLevels.get(logger));
-            logger.detachAppender(recordingAppender);
+            logger.detachAppender(listAppender);
         }
     }
 }
