@@ -17,7 +17,7 @@ package com.codereligion.cherry.junit.logback;
 
 import org.junit.Test;
 
-public class LogbackLoggingTest {
+public class LogRecorderTest {
 
     @Test
     public void recordsSingleEvent() {
@@ -31,6 +31,11 @@ public class LogbackLoggingTest {
 
     @Test
     public void doesNotRecordEventsWhenTestIsFinished() {
+
+    }
+
+    @Test
+    public void resetsLoggersLogLevelWhenTestIsFinished() {
 
     }
 
