@@ -18,7 +18,9 @@ package com.codereligion.cherry.junit.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import java.util.List;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
@@ -28,6 +30,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 public class LogRecorderTest {
+
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void recordsSingleEvent() throws Throwable {
@@ -107,6 +112,20 @@ public class LogRecorderTest {
 
         // then
         assertThat(logger.getLevel(), is(level));
+    }
+
+    @Test
+    public void throwsLogRecorderExceptionWhenNoEventWasRecorder() throws Throwable {
+
+        // given
+        final LogRecorder logRecorder = LogRecorder.expectedLogs(new LogSpec("foo", Level.ERROR));
+        logRecorder.apply(mock(Statement.class), Description.EMPTY).evaluate();
+
+        // expect
+        expectedException.expect(LogRecorderException.class);
+
+        // when
+        logRecorder.event();
     }
 
 }

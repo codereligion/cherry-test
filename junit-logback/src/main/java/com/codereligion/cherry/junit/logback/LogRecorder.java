@@ -41,15 +41,15 @@ public class LogRecorder implements TestRule {
      * Creates a log recorder rule which records events for all logs specified by the given {@link com.codereligion.cherry.junit.logback.LogSpec}.
      * If the same logger is specified multiple times with a different log level, then the last spec wins.
      *
-     * @param logSpecs
-     * @return
+     * @param logSpecs the to be expected logs
+     * @return a new {@link com.codereligion.cherry.junit.logback.LogRecorder}
      */
     public static LogRecorder expectedLogs(final LogSpec... logSpecs) {
         return new LogRecorder(logSpecs);
     }
 
     private final Set<LogSpec> logSpecs = new HashSet<LogSpec>();
-    private final Map<Logger, Level> predivousLogLevels = new HashMap<Logger, Level>();
+    private final Map<Logger, Level> previousLogLevels = new HashMap<Logger, Level>();
 
     @SuppressWarnings("unchecked")
     private final RecordingAppender recordingAppender = new RecordingAppender();
@@ -98,7 +98,7 @@ public class LogRecorder implements TestRule {
     private void before() throws Throwable {
         for (final LogSpec logSpec : logSpecs) {
             final Logger logger = logSpec.getLogger();
-            predivousLogLevels.put(logger, logger.getLevel());
+            previousLogLevels.put(logger, logger.getLevel());
             logger.setLevel(logSpec.getLevel());
             logger.addAppender(recordingAppender);
         }
@@ -107,7 +107,7 @@ public class LogRecorder implements TestRule {
     private void after() {
         for (final LogSpec logSpec : logSpecs) {
             final Logger logger = logSpec.getLogger();
-            logger.setLevel(predivousLogLevels.get(logger));
+            logger.setLevel(previousLogLevels.get(logger));
             logger.detachAppender(recordingAppender);
         }
     }
