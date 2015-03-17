@@ -22,6 +22,7 @@ import org.junit.runners.model.Statement;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test for {@link com.codereligion.cherry.junit.joda.JodaTimeMachine}
@@ -52,19 +53,9 @@ public class JodaTimeMachineTest {
         jodaTimeMachine.goToAndStayAt(1);
 
         // when
-        jodaTimeMachine.apply(emptyStatement(), Description.EMPTY).evaluate();
+        jodaTimeMachine.apply(mock(Statement.class), Description.EMPTY).evaluate();
 
         // then
         assertThat(DateTimeUtils.currentTimeMillis(), is(not(1L)));
     }
-
-    private Statement emptyStatement() {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-
-            }
-        };
-    }
-
 }

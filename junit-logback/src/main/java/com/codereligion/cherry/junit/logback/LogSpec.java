@@ -21,18 +21,19 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Holds a {@link ch.qos.logback.classic.Logger} and a {@link ch.qos.logback.classic.Level}.
+ * Holds a {@link ch.qos.logback.classic.Logger} and a {@link ch.qos.logback.classic.Level} which specify the log events
+ * which should be recorded.
  */
 public class LogSpec {
 
     private final Level level;
     private final Logger logger;
 
-    public LogSpec(final Level level, final Class<?> type) {
-        this(level, type.getName());
+    public LogSpec(final Class<?> type, final Level level) {
+        this(type.getName(), level);
     }
 
-    public LogSpec(final Level level, final String loggerName) {
+    public LogSpec(final String loggerName, final Level level) {
         this.level = level;
         this.logger = (Logger) LoggerFactory.getLogger(loggerName);
     }

@@ -71,11 +71,11 @@ public class LogRecorder implements TestRule {
 
     /**
      * @return the first recorded event
-     * @throws com.codereligion.cherry.junit.logback.LogbackLoggingException when no event was recorded
+     * @throws LogRecorderException when no event was recorded
      */
     public ILoggingEvent event() {
         if (recordingAppender.getEvents().isEmpty()) {
-            throw new LogbackLoggingException("No event was recorded during the test execution.");
+            throw new LogRecorderException("No event was recorded during the test execution.");
         }
 
         return recordingAppender.getEvents().get(0);

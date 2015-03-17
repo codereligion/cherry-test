@@ -16,9 +16,12 @@
     <properties>
         <junit.version>4.12</junit.version>
         <joda.time.version>2.7</joda.time.version>
+        <mockito.core.version>1.10.19</mockito.core.version>
     </properties>
 
     <dependencies>
+
+        <!-- compile -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -28,6 +31,14 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda.time.version}</version>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.core.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

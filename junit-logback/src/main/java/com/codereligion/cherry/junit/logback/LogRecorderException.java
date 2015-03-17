@@ -21,9 +21,9 @@ package com.codereligion.cherry.junit.logback;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LogbackLoggingException extends RuntimeException {
+public class LogRecorderException extends RuntimeException {
 
-    public LogbackLoggingException(final String message) {
+    public LogRecorderException(final String message) {
         super(message);
     }
 }
