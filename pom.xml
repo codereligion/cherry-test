@@ -23,7 +23,7 @@
     </modules>
 
 
-    <name>Cherry-Junit</name>
+    <name>Cherry-Test</name>
     <description>Contains test extensions</description>
     <url>https://github.com/codereligion/cherry-test</url>
 
