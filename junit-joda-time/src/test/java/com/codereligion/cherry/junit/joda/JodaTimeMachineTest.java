@@ -15,6 +15,7 @@
  */
 package com.codereligion.cherry.junit.joda;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -33,13 +34,26 @@ import static org.mockito.Mockito.mock;
 public class JodaTimeMachineTest {
 
     @Test
-    public void setsTimeToDateTimeUtils() {
+    public void setsTimeToDateTimeUtilsUsingMillis() {
 
         // given
         final JodaTimeMachine jodaTimeMachine = new JodaTimeMachine();
 
         // when
         jodaTimeMachine.goToAndStayAt(1);
+
+        // then
+        assertThat(DateTimeUtils.currentTimeMillis(), is(1L));
+    }
+
+    @Test
+    public void setsTimeToDateTimeUtilsUsingDateTime() {
+
+        // given
+        final JodaTimeMachine jodaTimeMachine = new JodaTimeMachine();
+
+        // when
+        jodaTimeMachine.goToAndStayAt(new DateTime(1));
 
         // then
         assertThat(DateTimeUtils.currentTimeMillis(), is(1L));
