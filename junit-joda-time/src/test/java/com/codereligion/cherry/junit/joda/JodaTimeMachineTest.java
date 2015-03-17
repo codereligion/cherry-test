@@ -8,6 +8,12 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Test for {@link com.codereligion.cherry.junit.joda.JodaTimeMachine}
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 17.03.2015
+ */
 public class JodaTimeMachineTest {
 
     @Test

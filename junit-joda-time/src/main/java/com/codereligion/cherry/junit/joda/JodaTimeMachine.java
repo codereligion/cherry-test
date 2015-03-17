@@ -22,6 +22,13 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+/**
+ * JUnit rule which allows to go to a specific date/time and stay there. It uses {@link org.joda.time.DateTimeUtils} to change the "system" time.
+ * At the end of the test the time is reset to the system time.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 17.03.2015
+ */
 public class JodaTimeMachine implements TestRule {
 
     @Override

@@ -16,7 +16,6 @@
 package com.codereligion.cherry.junit.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -24,45 +23,50 @@ import java.util.Set;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.mockito.ArgumentCaptor;
-import org.mockito.verification.VerificationMode;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
+/**
+ * JUnit rule which temporarily adds an in-memory recording appender to the loggers specified by the given {@link
+ * com.codereligion.cherry.junit.logback.LogSpec}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 17.03.2015
+ */
 public class LogbackLogging implements TestRule {
 
-    public static LogbackLogging expectedLogs(final LogInfo... logInfos) {
-        return new LogbackLogging(logInfos);
+    public static LogbackLogging expectedLogs(final LogSpec... logSpecs) {
+        return new LogbackLogging(logSpecs);
     }
 
-    private final Set<LogInfo> logInfos = new HashSet<LogInfo>();
+    private final Set<LogSpec> logSpecs = new HashSet<LogSpec>();
 
     @SuppressWarnings("unchecked")
-    private final Appender<ILoggingEvent> mockAppender = mock(Appender.class);
+    private final RecordingAppender recordingAppender = new RecordingAppender();
 
-    private LogbackLogging(final LogInfo[] logInfos) {
-        Collections.addAll(this.logInfos, logInfos);
+    private LogbackLogging(final LogSpec... logSpecs) {
+        Collections.addAll(this.logSpecs, logSpecs);
     }
 
     public Statement apply(final Statement base, final Description description) {
         return statement(base);
     }
 
-    public List<ILoggingEvent> events(final VerificationMode times) {
-        final ArgumentCaptor<ILoggingEvent> errorCaptor = ArgumentCaptor.forClass(ILoggingEvent.class);
-        verify(mockAppender, times).doAppend(errorCaptor.capture());
-        return errorCaptor.getAllValues();
+    /**
+     * @return all recorded events
+     */
+    public List<ILoggingEvent> events() {
+        return recordingAppender.getEvents();
     }
 
+    /**
+     * @return the first recorded event
+     * @throws com.codereligion.cherry.junit.logback.LogbackLoggingException when no event was recorded
+     */
     public ILoggingEvent event() {
-        final ArgumentCaptor<ILoggingEvent> errorCaptor = ArgumentCaptor.forClass(ILoggingEvent.class);
-        verify(mockAppender).doAppend(errorCaptor.capture());
-        return errorCaptor.getValue();
-    }
+        if (recordingAppender.getEvents().isEmpty()) {
+            throw new LogbackLoggingException("No events were recorded during the test execution.");
+        }
 
-    public void verifyZeroInteractionsOnAppender() {
-        verifyZeroInteractions(mockAppender);
+        return recordingAppender.getEvents().get(0);
     }
 
     private Statement statement(final Statement base) {
@@ -80,15 +84,15 @@ public class LogbackLogging implements TestRule {
     }
 
     private void before() throws Throwable {
-        for (final LogInfo logInfo : logInfos) {
-            logInfo.getLogger().setLevel(logInfo.getLevel());
-            logInfo.getLogger().addAppender(mockAppender);
+        for (final LogSpec logSpec : logSpecs) {
+            logSpec.getLogger().setLevel(logSpec.getLevel());
+            logSpec.getLogger().addAppender(recordingAppender);
         }
     }
 
     private void after() {
-        for (final LogInfo logInfo : logInfos) {
-            logInfo.getLogger().detachAppender(mockAppender);
+        for (final LogSpec logSpec : logSpecs) {
+            logSpec.getLogger().detachAppender(recordingAppender);
         }
     }
 }

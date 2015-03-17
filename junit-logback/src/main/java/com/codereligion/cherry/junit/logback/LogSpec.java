@@ -23,16 +23,16 @@ import org.slf4j.LoggerFactory;
 /**
  * Holds a {@link ch.qos.logback.classic.Logger} and a {@link ch.qos.logback.classic.Level}.
  */
-public class LogInfo {
+public class LogSpec {
 
     private final Level level;
     private final Logger logger;
 
-    public LogInfo(final Level level, final Class<?> type) {
+    public LogSpec(final Level level, final Class<?> type) {
         this(level, type.getName());
     }
 
-    public LogInfo(final Level level, final String loggerName) {
+    public LogSpec(final Level level, final String loggerName) {
         this.level = level;
         this.logger = (Logger) LoggerFactory.getLogger(loggerName);
     }
@@ -50,10 +50,10 @@ public class LogInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final LogInfo logInfo = (LogInfo) o;
+        final LogSpec logSpec = (LogSpec) o;
 
-        if (level != null ? !level.equals(logInfo.level) : logInfo.level != null) return false;
-        if (logger != null ? !logger.equals(logInfo.logger) : logInfo.logger != null) return false;
+        if (level != null ? !level.equals(logSpec.level) : logSpec.level != null) return false;
+        if (logger != null ? !logger.equals(logSpec.logger) : logSpec.logger != null) return false;
 
         return true;
     }

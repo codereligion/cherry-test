@@ -22,6 +22,9 @@ import org.hamcrest.TypeSafeMatcher;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to be of the specified {@code level}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 17.03.2015
  */
 public class LoggingEventLevelMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
