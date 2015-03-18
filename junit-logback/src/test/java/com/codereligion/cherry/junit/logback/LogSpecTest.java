@@ -23,7 +23,6 @@ import org.junit.rules.ExpectedException;
 import org.slf4j.LoggerFactory;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
@@ -136,10 +135,13 @@ public class LogSpecTest {
         final LogSpec second = new LogSpec("foo", Level.ERROR);
         final LogSpec third = new LogSpec("foo", Level.ERROR);
         final LogSpec shouldNotBeEqual = new LogSpec("bar", Level.ERROR);
+        final LogSpec shouldAlsoNotBeEqual = new LogSpec("foo", Level.WARN);
 
+        // not equal to null
+        assertThat(first.equals(null), is(false));
 
-        // not equals to null
-        assertThat(first, is(not(nullValue())));
+        // not equal to other class
+        assertThat(first.equals(Integer.class), is(false));
 
         // reflexive
         assertThat(first, is(first));
@@ -152,6 +154,7 @@ public class LogSpecTest {
 
         // negative test
         assertThat(first, is(not(shouldNotBeEqual)));
+        assertThat(first, is(not(shouldAlsoNotBeEqual)));
     }
 
     @Test
