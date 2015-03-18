@@ -18,18 +18,42 @@ package com.codereligion.cherry.test.hamcrest.logback;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.not;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to contain the specified {@link Throwable}.
+ * <p/>
+ * <p/>
+ * This matcher returns true when: <li> <ul>the given throwable is {@code null} and the logging event does not have an associated throwable</ul> <ul>the given
+ * throwable matches in class and message the throwable which is associated with the logging event</ul> </li>
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
 public class LoggingEventThrowableMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
+    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWhichContainsThrowable(final Throwable throwable) {
+        return hasItem(new LoggingEventThrowableMatcher(throwable));
+    }
+
+    public static Matcher<ILoggingEvent> containsThrowable(final Throwable throwable) {
+        return new LoggingEventThrowableMatcher(throwable);
+    }
+
+    public static Matcher<ILoggingEvent> doesNotContainThrowable(final Throwable throwable) {
+        return not(new LoggingEventThrowableMatcher(throwable));
+    }
+
     private Throwable throwable;
 
+    /**
+     * Creates a new instance using the given {@link java.lang.Throwable}.
+     *
+     * @param throwable the throwable to match the events {@code throwableProxy} with
+     */
     public LoggingEventThrowableMatcher(final Throwable throwable) {
         this.throwable = throwable;
     }
@@ -38,8 +62,8 @@ public class LoggingEventThrowableMatcher extends TypeSafeMatcher<ILoggingEvent>
     public boolean matchesSafely(final ILoggingEvent event) {
 
         final IThrowableProxy throwableProxy = event.getThrowableProxy();
-        if (throwableProxy == null) {
-            return false;
+        if (throwableProxy == null || throwable == null) {
+            return throwableProxy == throwable;
         }
 
         final boolean classesMatch = throwableProxy.getClassName().equals(throwable.getClass().getName());

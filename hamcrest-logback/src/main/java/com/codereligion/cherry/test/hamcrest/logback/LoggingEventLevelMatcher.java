@@ -18,7 +18,10 @@ package com.codereligion.cherry.test.hamcrest.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.hamcrest.CoreMatchers.everyItem;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to be of the specified {@code level}.
@@ -28,9 +31,24 @@ import org.hamcrest.TypeSafeMatcher;
  */
 public class LoggingEventLevelMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
+    public static Matcher<Iterable<ILoggingEvent>> hasOnlyItemsOfLevel(final Level level) {
+        return everyItem(new LoggingEventLevelMatcher(level));
+    }
+
+    public static Matcher<ILoggingEvent> hasLevel(final Level level) {
+        return new LoggingEventLevelMatcher(level);
+    }
+
     private final Level level;
 
+    /**
+     * Creates a new instance using the given {@link ch.qos.logback.classic.Level}.
+     *
+     * @param level the level to match the events log level against.
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
     public LoggingEventLevelMatcher(final Level level) {
+        checkArgument(level != null, "level must not be null.");
         this.level = level;
     }
 

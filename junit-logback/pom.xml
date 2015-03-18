@@ -13,12 +13,6 @@
 
     <artifactId>codereligion-cherry-junit-logback</artifactId>
 
-    <properties>
-        <junit.version>4.12</junit.version>
-        <logback.classic.version>1.1.2</logback.classic.version>
-        <guava.version>18.0</guava.version>
-        <mockito.core.version>1.10.19</mockito.core.version>
-    </properties>
 
     <dependencies>
         <!-- compile -->
@@ -32,17 +26,13 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.classic.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
 
         <!-- test -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.core.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

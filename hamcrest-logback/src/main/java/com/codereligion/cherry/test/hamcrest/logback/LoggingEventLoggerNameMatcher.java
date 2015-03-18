@@ -17,7 +17,9 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to have a specific {@code loggerName}
@@ -27,9 +29,24 @@ import org.hamcrest.TypeSafeMatcher;
  */
 public class LoggingEventLoggerNameMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
+    public static Matcher<ILoggingEvent> usesLogger(final String loggerName) {
+        return new LoggingEventLoggerNameMatcher(loggerName);
+    }
+
+    public static Matcher<ILoggingEvent> usesLogger(final Class<?> type) {
+        return new LoggingEventLoggerNameMatcher(type.getName());
+    }
+
     private final String loggerName;
 
+    /**
+     * Creates a new instance using the given {@code loggerName}.
+     *
+     * @param loggerName the name of the logger to match the events logger with
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
     public LoggingEventLoggerNameMatcher(final String loggerName) {
+        checkArgument(loggerName != null, "loggerName must not be null");
         this.loggerName = loggerName;
     }
 
