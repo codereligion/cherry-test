@@ -11,7 +11,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>codereligion-cherry-test-junit-logback</artifactId>
+    <artifactId>codereligion-cherry-junit-logback</artifactId>
 
     <properties>
         <junit.version>4.12</junit.version>
