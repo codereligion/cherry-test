@@ -89,6 +89,11 @@ public class LoggingEventMessageMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
     @Override
     public void describeTo(final Description description) {
-        matcher.describeTo(description);
+        matcher.describeTo(description.appendText("an ILoggingEvent with a message matching: "));
+    }
+
+    @Override
+    protected void describeMismatchSafely(final ILoggingEvent item, final Description mismatchDescription) {
+        mismatchDescription.appendText("an ILoggingEvent with message: " + item.getFormattedMessage());
     }
 }

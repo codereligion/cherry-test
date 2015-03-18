@@ -16,9 +16,7 @@
 package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -27,7 +25,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLoggerNameMatcher extends TypeSafeMatcher<ILoggingEvent> {
+public class LoggingEventLoggerNameMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
 
     public static Matcher<ILoggingEvent> usesLogger(final String loggerName) {
         return new LoggingEventLoggerNameMatcher(loggerName);
@@ -56,7 +54,17 @@ public class LoggingEventLoggerNameMatcher extends TypeSafeMatcher<ILoggingEvent
     }
 
     @Override
-    public void describeTo(final Description description) {
-        description.appendText("a LoggingEvent for logger with name: '" + loggerName + "'");
+    protected String getMessage(final Object object) {
+        return "an ILoggingEvent for logger with name: " + object;
+    }
+
+    @Override
+    protected Object getActualValue(final ILoggingEvent item) {
+        return item.getLoggerName();
+    }
+
+    @Override
+    protected Object getExpectedValue() {
+        return loggerName;
     }
 }

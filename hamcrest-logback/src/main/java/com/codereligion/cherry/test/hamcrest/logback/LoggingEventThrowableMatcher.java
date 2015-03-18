@@ -17,9 +17,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.not;
 
@@ -33,7 +31,7 @@ import static org.hamcrest.Matchers.not;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventThrowableMatcher extends TypeSafeMatcher<ILoggingEvent> {
+public class LoggingEventThrowableMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
 
     public static Matcher<Iterable<? super ILoggingEvent>> hasItemWhichContainsThrowable(final Throwable throwable) {
         return hasItem(new LoggingEventThrowableMatcher(throwable));
@@ -76,7 +74,28 @@ public class LoggingEventThrowableMatcher extends TypeSafeMatcher<ILoggingEvent>
     }
 
     @Override
-    public void describeTo(final Description description) {
-        description.appendText("a LoggingEvent containing '" + throwable + "'");
+    protected String getMessage(final Object object) {
+        return "an ILoggingEvent with a throwable matching: " + object;
+    }
+
+    @Override
+    protected Object getActualValue(final ILoggingEvent item) {
+
+        final IThrowableProxy throwableProxy = item.getThrowableProxy();
+
+        if (throwableProxy == null) {
+            return "null";
+        }
+
+        return throwableProxy.getClassName() + "[" + throwableProxy.getMessage() + "]";
+    }
+
+    @Override
+    protected Object getExpectedValue() {
+        if (throwable == null) {
+            return "null";
+        }
+
+        return throwable.getClass().getName() + "[" + throwable.getMessage() + "]";
     }
 }

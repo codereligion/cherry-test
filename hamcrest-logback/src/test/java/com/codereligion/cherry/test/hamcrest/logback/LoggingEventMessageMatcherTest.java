@@ -18,6 +18,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -64,7 +65,27 @@ public class LoggingEventMessageMatcherTest {
 
         // then
         assertThat(loggingEventMessageMatcher.matches(loggingEvent), is(false));
+    }
 
+    @Test
+    public void describesError() {
+
+        // given
+        final StringDescription matchDescription = new StringDescription();
+        final StringDescription missMatchDescription = new StringDescription();
+        final Matcher<String> matcher = CoreMatchers.containsString("foo");
+        final LoggingEventMessageMatcher loggingEventMessageMatcher = new LoggingEventMessageMatcher(matcher);
+        final LoggingEvent loggingEvent = new LoggingEvent();
+        loggingEvent.setMessage("bar");
+        loggingEventMessageMatcher.matches(loggingEvent);
+
+        // when
+        loggingEventMessageMatcher.describeTo(matchDescription);
+        loggingEventMessageMatcher.describeMismatch(loggingEvent, missMatchDescription);
+
+        // then
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with a message matching: a string containing \"foo\""));
+        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with message: bar"));
     }
 
 }

@@ -17,6 +17,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+import org.hamcrest.StringDescription;
 import org.junit.Test;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -117,5 +118,62 @@ public class LoggingEventThrowableMatcherTest {
         assertThat(matcher.matches(loggingEvent), is(false));
     }
 
+    @Test
+    public void describesErrorWhenGivenNullExceptions() {
 
+        // given
+        final StringDescription matchDescription = new StringDescription();
+        final StringDescription missMatchDescription = new StringDescription();
+        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(null);
+        final LoggingEvent loggingEvent = new LoggingEvent();
+        matcher.matches(loggingEvent);
+
+        // when
+        matcher.describeTo(matchDescription);
+        matcher.describeMismatch(loggingEvent, missMatchDescription);
+
+        // then
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with a throwable matching: null"));
+        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with a throwable matching: null"));
+    }
+
+    @Test
+    public void describesErrorWhenGivenExceptions() {
+
+        // given
+        final StringDescription matchDescription = new StringDescription();
+        final StringDescription missMatchDescription = new StringDescription();
+        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new IllegalArgumentException("foo"));
+        final LoggingEvent loggingEvent = new LoggingEvent();
+        loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException("bar")));
+        matcher.matches(loggingEvent);
+
+        // when
+        matcher.describeTo(matchDescription);
+        matcher.describeMismatch(loggingEvent, missMatchDescription);
+
+        // then
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.IllegalArgumentException[foo]"));
+        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.NullPointerException[bar]"));
+    }
+
+    @Test
+    public void describesErrorWhenGivenExceptionsWithoutMessage () {
+
+        // given
+        final StringDescription matchDescription = new StringDescription();
+        final StringDescription missMatchDescription = new StringDescription();
+        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new IllegalArgumentException());
+        final LoggingEvent loggingEvent = new LoggingEvent();
+        loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException()));
+        matcher.matches(loggingEvent);
+
+        // when
+        matcher.describeTo(matchDescription);
+        matcher.describeMismatch(loggingEvent, missMatchDescription);
+
+        // then
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.IllegalArgumentException[null]"));
+        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.NullPointerException[null]"));
+    }
 }

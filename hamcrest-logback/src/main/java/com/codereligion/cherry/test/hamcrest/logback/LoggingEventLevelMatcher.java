@@ -17,9 +17,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.hamcrest.CoreMatchers.everyItem;
 
@@ -29,7 +27,7 @@ import static org.hamcrest.CoreMatchers.everyItem;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLevelMatcher extends TypeSafeMatcher<ILoggingEvent> {
+public class LoggingEventLevelMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
 
     public static Matcher<Iterable<ILoggingEvent>> hasOnlyItemsOfLevel(final Level level) {
         return everyItem(new LoggingEventLevelMatcher(level));
@@ -58,7 +56,17 @@ public class LoggingEventLevelMatcher extends TypeSafeMatcher<ILoggingEvent> {
     }
 
     @Override
-    public void describeTo(final Description description) {
-        description.appendText("a LoggingEvent with level '" + level + "'");
+    protected String getMessage(final Object object) {
+        return "an ILoggingEvent with level: " + object;
+    }
+
+    @Override
+    protected Object getActualValue(final ILoggingEvent item) {
+        return item.getLevel();
+    }
+
+    @Override
+    protected Object getExpectedValue() {
+        return level;
     }
 }

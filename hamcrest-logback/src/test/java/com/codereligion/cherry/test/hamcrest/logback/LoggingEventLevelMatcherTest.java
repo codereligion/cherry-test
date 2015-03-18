@@ -17,6 +17,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -61,5 +62,25 @@ public class LoggingEventLevelMatcherTest {
 
         // then
         assertThat(matcher.matches(loggingEvent), is(false));
+    }
+
+    @Test
+    public void describesError() {
+
+        // given
+        final StringDescription matchDescription = new StringDescription();
+        final StringDescription missMatchDescription = new StringDescription();
+        final LoggingEventLevelMatcher matcher = new LoggingEventLevelMatcher(Level.ERROR);
+        final LoggingEvent loggingEvent = new LoggingEvent();
+        loggingEvent.setLevel(Level.INFO);
+        matcher.matches(loggingEvent);
+
+        // when
+        matcher.describeTo(matchDescription);
+        matcher.describeMismatch(loggingEvent, missMatchDescription);
+
+        // then
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with level: ERROR"));
+        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with level: INFO"));
     }
 }
