@@ -128,4 +128,27 @@ public class LogRecorderTest {
         logRecorder.event();
     }
 
+
+    @Test
+    public void lastSpecWins() throws Throwable {
+
+        // given
+        final String loggerName = "foo";
+        final String message = "ermahgerd";
+        final LogRecorder logRecorder = LogRecorder.expectedLogs(new LogSpec(loggerName, Level.INFO), new LogSpec(loggerName, Level.ERROR));
+
+        // when
+        logRecorder.apply(new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                final Logger logger = LoggerFactory.getLogger(loggerName);
+                logger.info("that should not appear");
+                logger.error(message);
+            }
+        }, Description.EMPTY).evaluate();
+
+        // then
+        assertThat(logRecorder.event().getMessage(), is(message));
+    }
+
 }

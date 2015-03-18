@@ -21,7 +21,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class LogRecorder implements TestRule {
         return new LogRecorder(logSpecs);
     }
 
-    private final Set<LogSpec> logSpecs = new HashSet<LogSpec>();
+    private final Set<LogSpec> logSpecs = new LinkedHashSet<LogSpec>();
     private final Map<Logger, Level> previousLogLevels = new HashMap<Logger, Level>();
 
     @SuppressWarnings("unchecked")
