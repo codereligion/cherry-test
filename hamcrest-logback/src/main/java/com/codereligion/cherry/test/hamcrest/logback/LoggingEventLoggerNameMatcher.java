@@ -46,7 +46,7 @@ public class LoggingEventLoggerNameMatcher extends TypeSafeMatcher<ILoggingEvent
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public LoggingEventLoggerNameMatcher(final String loggerName) {
-        checkArgument(loggerName != null, "loggerName must not be null");
+        checkArgument(loggerName != null, "loggerName must not be null.");
         this.loggerName = loggerName;
     }
 

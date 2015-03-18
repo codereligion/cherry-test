@@ -27,6 +27,12 @@ public class LoggingEventLoggerNameMatcherTest {
     @Test
     public void nullLoggerNameCausesIllegalArgumentException() {
 
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerName must not be null.");
+
+        // when
+        new LoggingEventLoggerNameMatcher(null);
     }
 
     @Test
