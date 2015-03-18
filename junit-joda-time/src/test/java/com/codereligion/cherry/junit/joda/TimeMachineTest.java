@@ -26,21 +26,21 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
- * Test for {@link com.codereligion.cherry.junit.joda.JodaTimeMachine}
+ * Test for {@link TimeMachine}
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class JodaTimeMachineTest {
+public class TimeMachineTest {
 
     @Test
     public void setsTimeToDateTimeUtilsUsingMillis() {
 
         // given
-        final JodaTimeMachine jodaTimeMachine = new JodaTimeMachine();
+        final TimeMachine timeMachine = new TimeMachine();
 
         // when
-        jodaTimeMachine.goToAndStayAt(1);
+        timeMachine.goToAndStayAt(1);
 
         // then
         assertThat(DateTimeUtils.currentTimeMillis(), is(1L));
@@ -50,10 +50,10 @@ public class JodaTimeMachineTest {
     public void setsTimeToDateTimeUtilsUsingDateTime() {
 
         // given
-        final JodaTimeMachine jodaTimeMachine = new JodaTimeMachine();
+        final TimeMachine timeMachine = new TimeMachine();
 
         // when
-        jodaTimeMachine.goToAndStayAt(new DateTime(1));
+        timeMachine.goToAndStayAt(new DateTime(1));
 
         // then
         assertThat(DateTimeUtils.currentTimeMillis(), is(1L));
@@ -63,11 +63,11 @@ public class JodaTimeMachineTest {
     public void resetsTimeAfterExecution() throws Throwable {
 
         // given
-        final JodaTimeMachine jodaTimeMachine = new JodaTimeMachine();
-        jodaTimeMachine.goToAndStayAt(1);
+        final TimeMachine timeMachine = new TimeMachine();
+        timeMachine.goToAndStayAt(1);
 
         // when
-        jodaTimeMachine.apply(mock(Statement.class), Description.EMPTY).evaluate();
+        timeMachine.apply(mock(Statement.class), Description.EMPTY).evaluate();
 
         // then
         assertThat(DateTimeUtils.currentTimeMillis(), is(not(1L)));
