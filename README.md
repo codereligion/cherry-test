@@ -2,11 +2,11 @@
 
 This is a multi-module library which is part of the [cherry project](https://github.com/codereligion/cherry), it contains extensions for test frameworks like JUnit and Hamcrest.
 
-## Features
-TODO
-
 ## Requirements
 * Java 1.6 or higher
 
 ## Usage
-TODO
+For usages see respective READMEs:
+* [hamcrest-logback](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback/README.md)
+* [junit-joda-time](https://github.com/codereligion/cherry-test/blob/master/junit-joda-time/README.md)
+* [junit-logback](https://github.com/codereligion/cherry-test/blob/master/junit-logback/README.md)
