@@ -19,15 +19,16 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * JUnit rule which temporarily adds a {@link ch.qos.logback.core.read.ListAppender} to the loggers specified by the given {@link
@@ -49,14 +50,15 @@ public class LogRecorder implements TestRule {
         return new LogRecorder(logSpecs);
     }
 
-    private final Set<LogSpec> logSpecs = new LinkedHashSet<LogSpec>();
-    private final Map<Logger, Level> previousLogLevels = new HashMap<Logger, Level>();
+    private final Set<LogSpec> logSpecs = Sets.newLinkedHashSet();
+    private final Map<Logger, Level> previousLogLevels = Maps.newHashMap();
 
     @SuppressWarnings("unchecked")
     private final ListAppender<ILoggingEvent> listAppender = new ListAppender<ILoggingEvent>();
 
     private LogRecorder(final LogSpec... logSpecs) {
         Collections.addAll(this.logSpecs, logSpecs);
+        checkArgument(!this.logSpecs.contains(null), "logSpec must not be null.");
     }
 
     public Statement apply(final Statement base, final Description description) {

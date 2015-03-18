@@ -16,6 +16,7 @@
     <properties>
         <junit.version>4.12</junit.version>
         <joda.time.version>2.7</joda.time.version>
+        <guava.version>18.0</guava.version>
         <mockito.core.version>1.10.19</mockito.core.version>
     </properties>
 
@@ -31,6 +32,11 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${joda.time.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <!-- test -->

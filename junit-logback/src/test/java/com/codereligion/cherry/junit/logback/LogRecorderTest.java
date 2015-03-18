@@ -29,10 +29,30 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+/**
+ * Tests {@link com.codereligion.cherry.junit.logback.LogRecorder}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 17.03.2015
+ */
 public class LogRecorderTest {
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void nullLogSpecCausesIllegalArgumentException() {
+
+        // given
+        final LogSpec logSpec = null;
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("logSpec must not be null");
+
+        // when
+        LogRecorder.expectedLogs(logSpec);
+    }
 
     @Test
     public void recordsSingleEvent() throws Throwable {

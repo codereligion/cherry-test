@@ -15,8 +15,9 @@
 
     <properties>
         <junit.version>4.12</junit.version>
-        <mockito.core.version>1.10.19</mockito.core.version>
         <logback.classic.version>1.1.2</logback.classic.version>
+        <guava.version>18.0</guava.version>
+        <mockito.core.version>1.10.19</mockito.core.version>
     </properties>
 
     <dependencies>
@@ -30,6 +31,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.classic.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <!-- test -->

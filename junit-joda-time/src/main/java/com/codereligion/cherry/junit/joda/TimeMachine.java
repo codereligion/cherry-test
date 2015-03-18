@@ -21,6 +21,7 @@ import org.joda.time.DateTimeUtils;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * JUnit rule which allows to manipulate the time returned by various {@link org.joda.time.DateTimeUtils} methods and which will reset the time to the system
@@ -41,6 +42,9 @@ public class TimeMachine implements TestRule {
     }
 
     public void goToAndStayAt(final DateTime dateTime) {
+
+        checkArgument(dateTime != null, "dateTime must not be null.");
+
         DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
     }
 

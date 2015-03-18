@@ -17,7 +17,9 @@ package com.codereligion.cherry.junit.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.slf4j.LoggerFactory;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -25,7 +27,66 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests {@link com.codereligion.cherry.junit.logback.LogSpec}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 17.03.2015
+ */
 public class LogSpecTest {
+
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void nullLevelThrowsIllegalArgumentExceptionOnTypeConstructor() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("level must not be null");
+
+        // when
+        new LogSpec(this.getClass(), null);
+    }
+
+    @Test
+    public void nullLevelThrowsIllegalArgumentExceptionOnNameConstructor() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("level must not be null");
+
+        // when
+        new LogSpec("foo", null);
+    }
+
+    @Test
+    public void nullNameThrowsIllegalArgumentException() {
+
+        // given
+        final String name = null;
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerName must not be null");
+
+        // when
+        new LogSpec(name, Level.ERROR);
+    }
+
+    @Test
+    public void nullTypeThrowsIllegalArgumentException() {
+
+        // given
+        final Class<?> type = null;
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("type must not be null");
+
+        // when
+        new LogSpec(type, Level.ERROR);
+    }
 
     @Test
     public void allowsToSetLoggerByName() {

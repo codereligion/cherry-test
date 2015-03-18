@@ -69,6 +69,9 @@
         <build.helper.plugin.version>1.8</build.helper.plugin.version>
         <scm.plugin.version>1.9.2</scm.plugin.version>
 
+        <!-- dependencies -->
+        <jsr305.version>3.0.0</jsr305.version>
+
         <!-- ci properties -->
         <jacoco.version>0.6.2.201302030002</jacoco.version>
         <skip.code.coverage>true</skip.code.coverage>
@@ -201,7 +204,6 @@
     </build>
 
     <profiles>
-
         <profile>
             <id>generate.license.headers</id>
             <build>
@@ -224,5 +226,12 @@
         </profile>
     </profiles>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${jsr305.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
