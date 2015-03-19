@@ -33,16 +33,16 @@ import static org.hamcrest.Matchers.not;
  */
 public class LoggingEventThrowableMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
 
-    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWhichContainsThrowable(final Throwable throwable) {
-        return hasItem(new LoggingEventThrowableMatcher(throwable));
-    }
-
-    public static Matcher<ILoggingEvent> containsThrowable(final Throwable throwable) {
+    public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
         return new LoggingEventThrowableMatcher(throwable);
     }
 
-    public static Matcher<ILoggingEvent> doesNotContainThrowable(final Throwable throwable) {
-        return not(new LoggingEventThrowableMatcher(throwable));
+    public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
+        return not(hasThrowable(throwable));
+    }
+
+    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWithThrowable(final Throwable throwable) {
+        return hasItem(hasThrowable(throwable));
     }
 
     private Throwable throwable;
@@ -50,9 +50,9 @@ public class LoggingEventThrowableMatcher extends DescribingTypeSafeMatcher<ILog
     /**
      * Creates a new instance using the given {@link java.lang.Throwable}.
      *
-     * @param throwable the throwable to match the events {@code throwableProxy} with
+     * @param throwable the throwable to match the event's {@code throwableProxy} with
      */
-    public LoggingEventThrowableMatcher(final Throwable throwable) {
+    private LoggingEventThrowableMatcher(final Throwable throwable) {
         this.throwable = throwable;
     }
 

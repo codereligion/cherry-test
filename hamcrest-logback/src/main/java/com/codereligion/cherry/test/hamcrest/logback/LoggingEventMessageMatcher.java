@@ -33,40 +33,38 @@ import static org.hamcrest.Matchers.not;
  */
 public class LoggingEventMessageMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
-    public static Matcher<ILoggingEvent> containsMessage(final Matcher<String> matcher) {
+    public static Matcher<ILoggingEvent> hasMessage(final Matcher<String> matcher) {
         return new LoggingEventMessageMatcher(matcher);
     }
 
-    public static Matcher<ILoggingEvent> doesNotContainMessage(final String message) {
-        return not(new LoggingEventMessageMatcher(containsString(message)));
+    public static Matcher<ILoggingEvent> doesNotHaveMessage(final String message) {
+        return not(hasMessage(containsString(message)));
     }
 
+    public static Matcher<ILoggingEvent> hasMessage(final String message, final Object... args) {
 
-    public static Matcher<ILoggingEvent> containsMessage(final String message) {
-        return new LoggingEventMessageMatcher(containsString(message));
+        if (args.length == 0) {
+            return hasMessage(containsString(message));
+        }
+
+        return hasMessage(containsString(String.format(message, args)));
     }
 
-    public static Matcher<ILoggingEvent> containsMessage(final String message, final Object... args) {
-        final String formattedMessage = String.format(message, args);
-        return new LoggingEventMessageMatcher(containsString(formattedMessage));
+    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWithMessage(final String message, final Object... args) {
+
+        if (args.length == 0) {
+            return hasItem(hasMessage(containsString(message)));
+        }
+
+        return hasItem(hasMessage(containsString(String.format(message, args))));
     }
 
-
-    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWhichContainsMessage(final String message) {
-        return hasItem(new LoggingEventMessageMatcher(containsString(message)));
+    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWithMessage(final Matcher<String> matcher) {
+        return hasItem(hasMessage(matcher));
     }
 
-    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWhichContainsMessage(final String message, final Object... args) {
-        final String formattedMessage = String.format(message, args);
-        return hasItem(new LoggingEventMessageMatcher(containsString(formattedMessage)));
-    }
-
-    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWhichContainsMessage(final Matcher<String> matcher) {
-        return hasItem(new LoggingEventMessageMatcher(matcher));
-    }
-
-    public static Matcher<Iterable<? super ILoggingEvent>> hasNoItemWhichContainsMessage(final String message) {
-        return hasItem(not(new LoggingEventMessageMatcher(containsString(message))));
+    public static Matcher<Iterable<? super ILoggingEvent>> hasNoItemWithMessage(final String message) {
+        return hasItem(not(hasMessage(containsString(message))));
     }
 
     private Matcher<String> matcher;
@@ -77,7 +75,7 @@ public class LoggingEventMessageMatcher extends TypeSafeMatcher<ILoggingEvent> {
      * @param matcher the matcher to use
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    public LoggingEventMessageMatcher(final Matcher<String> matcher) {
+    private LoggingEventMessageMatcher(final Matcher<String> matcher) {
         checkArgument(matcher != null, "matcher must not be null.");
         this.matcher = matcher;
     }

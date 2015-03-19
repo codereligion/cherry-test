@@ -16,11 +16,16 @@
 package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import com.google.common.collect.Lists;
+import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.everyItemHasLevel;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.hasLevel;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -37,14 +42,14 @@ public class LoggingEventLevelMatcherTest {
         expectedException.expectMessage("level must not be null.");
 
         // when
-        new LoggingEventLevelMatcher(null);
+        hasLevel(null);
     }
 
     @Test
     public void matchesWhenGivenLevelEqualsEventLevel() {
 
         // given
-        final LoggingEventLevelMatcher matcher = new LoggingEventLevelMatcher(Level.ERROR);
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLevel(Level.ERROR);
 
@@ -56,7 +61,7 @@ public class LoggingEventLevelMatcherTest {
     public void doesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
 
         // given
-        final LoggingEventLevelMatcher matcher = new LoggingEventLevelMatcher(Level.ERROR);
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLevel(Level.INFO);
 
@@ -70,7 +75,7 @@ public class LoggingEventLevelMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final LoggingEventLevelMatcher matcher = new LoggingEventLevelMatcher(Level.ERROR);
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLevel(Level.INFO);
         matcher.matches(loggingEvent);
@@ -82,5 +87,33 @@ public class LoggingEventLevelMatcherTest {
         // then
         assertThat(matchDescription.toString(), is("an ILoggingEvent with level: ERROR"));
         assertThat(missMatchDescription.toString(), is("an ILoggingEvent with level: INFO"));
+    }
+
+    @Test
+    public void iterableMatcherMatchesOnlyIfAllItemsMatch() {
+
+        // given
+        final Matcher<Iterable<ILoggingEvent>> matcher = everyItemHasLevel(Level.ERROR);
+        final LoggingEvent first = new LoggingEvent();
+        first.setLevel(Level.ERROR);
+        final LoggingEvent second = new LoggingEvent();
+        second.setLevel(Level.ERROR);
+
+        // then
+        assertThat(matcher.matches(Lists.newArrayList(first, second)), is(true));
+    }
+
+    @Test
+    public void iterableMatcherDoesNotMatchOnlyIfThereIsOneMismatch() {
+
+        // given
+        final Matcher<Iterable<ILoggingEvent>> matcher = everyItemHasLevel(Level.ERROR);
+        final LoggingEvent first = new LoggingEvent();
+        first.setLevel(Level.ERROR);
+        final LoggingEvent second = new LoggingEvent();
+        second.setLevel(Level.INFO);
+
+        // then
+        assertThat(matcher.matches(Lists.newArrayList(first, second)), is(false));
     }
 }

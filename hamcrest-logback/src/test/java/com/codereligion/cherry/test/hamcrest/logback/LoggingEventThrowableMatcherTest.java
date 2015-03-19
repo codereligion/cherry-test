@@ -15,10 +15,13 @@
  */
 package com.codereligion.cherry.test.hamcrest.logback;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventThrowableMatcher.hasThrowable;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,7 +31,7 @@ public class LoggingEventThrowableMatcherTest {
     public void matchesWhenBothThrowablesAreNull() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(null);
+        final Matcher<ILoggingEvent> matcher = hasThrowable(null);
         final LoggingEvent loggingEvent = new LoggingEvent();
 
         // then
@@ -39,7 +42,7 @@ public class LoggingEventThrowableMatcherTest {
     public void doesNotMatchWhenEventThrowableIsNull() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new RuntimeException("opsi!"));
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new RuntimeException("opsi!"));
         final LoggingEvent loggingEvent = new LoggingEvent();
 
         // then
@@ -50,7 +53,7 @@ public class LoggingEventThrowableMatcherTest {
     public void doesNotMatchWhenGivenThrowableIsNull() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(null);
+        final Matcher<ILoggingEvent> matcher = hasThrowable(null);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new RuntimeException("opsi!")));
 
@@ -62,7 +65,7 @@ public class LoggingEventThrowableMatcherTest {
     public void matchesWhenThrowableClassesAreEqual() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new RuntimeException());
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new RuntimeException());
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new RuntimeException()));
 
@@ -74,7 +77,7 @@ public class LoggingEventThrowableMatcherTest {
     public void doesNotMatchWhenThrowableClassesAreNotEqual() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new NullPointerException("opsi!"));
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new NullPointerException("opsi!"));
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new IllegalArgumentException("opsi!")));
 
@@ -86,7 +89,7 @@ public class LoggingEventThrowableMatcherTest {
     public void matchesWhenThrowableMessagesAreEqual() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new NullPointerException("opsi!"));
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new NullPointerException("opsi!"));
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException("opsi!")));
 
@@ -98,7 +101,7 @@ public class LoggingEventThrowableMatcherTest {
     public void matchesWhenThrowableMessagesAreNull() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new NullPointerException(null));
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new NullPointerException(null));
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException(null)));
 
@@ -110,7 +113,7 @@ public class LoggingEventThrowableMatcherTest {
     public void doesNotMatchWhenThrowableMessageAreNotEqual() {
 
         // given
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new NullPointerException("opsi!"));
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new NullPointerException("opsi!"));
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException("nope!")));
 
@@ -124,7 +127,7 @@ public class LoggingEventThrowableMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(null);
+        final Matcher<ILoggingEvent> matcher = hasThrowable(null);
         final LoggingEvent loggingEvent = new LoggingEvent();
         matcher.matches(loggingEvent);
 
@@ -143,7 +146,7 @@ public class LoggingEventThrowableMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new IllegalArgumentException("foo"));
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new IllegalArgumentException("foo"));
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException("bar")));
         matcher.matches(loggingEvent);
@@ -163,7 +166,7 @@ public class LoggingEventThrowableMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final LoggingEventThrowableMatcher matcher = new LoggingEventThrowableMatcher(new IllegalArgumentException());
+        final Matcher<ILoggingEvent> matcher = hasThrowable(new IllegalArgumentException());
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setThrowableProxy(new ThrowableProxy(new NullPointerException()));
         matcher.matches(loggingEvent);

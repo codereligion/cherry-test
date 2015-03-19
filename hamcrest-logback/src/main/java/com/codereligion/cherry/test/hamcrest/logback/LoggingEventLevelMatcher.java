@@ -29,12 +29,28 @@ import static org.hamcrest.CoreMatchers.everyItem;
  */
 public class LoggingEventLevelMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
 
-    public static Matcher<Iterable<ILoggingEvent>> hasOnlyItemsOfLevel(final Level level) {
-        return everyItem(new LoggingEventLevelMatcher(level));
-    }
-
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
+     * to the given {@link ch.qos.logback.classic.Level}.
+     *
+     * @param level the level to match the event's log level against.
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
     public static Matcher<ILoggingEvent> hasLevel(final Level level) {
         return new LoggingEventLevelMatcher(level);
+    }
+
+    /**
+     * Creates a new matcher for {@link Iterable Iterables} that only matches when a single pass over the examined {@link Iterable} yields items that are all
+     * matched by the {@link LoggingEventLevelMatcher} using the given {@link ch.qos.logback.classic.Level}.
+     *
+     * @param level the level to match the iterable items against
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
+    public static Matcher<Iterable<ILoggingEvent>> everyItemHasLevel(final Level level) {
+        return everyItem(hasLevel(level));
     }
 
     private final Level level;
@@ -42,10 +58,10 @@ public class LoggingEventLevelMatcher extends DescribingTypeSafeMatcher<ILogging
     /**
      * Creates a new instance using the given {@link ch.qos.logback.classic.Level}.
      *
-     * @param level the level to match the events log level against.
+     * @param level the level to match the event's log level against.
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    public LoggingEventLevelMatcher(final Level level) {
+    private LoggingEventLevelMatcher(final Level level) {
         checkArgument(level != null, "level must not be null.");
         this.level = level;
     }

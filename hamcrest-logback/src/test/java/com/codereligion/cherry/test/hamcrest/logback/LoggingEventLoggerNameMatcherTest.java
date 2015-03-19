@@ -15,11 +15,14 @@
  */
 package com.codereligion.cherry.test.hamcrest.logback;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggerNameMatcher.wasLoggedBy;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,19 +34,36 @@ public class LoggingEventLoggerNameMatcherTest {
     @Test
     public void nullLoggerNameCausesIllegalArgumentException() {
 
+        // given
+        final String loggerName = null;
+
         // expect
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("loggerName must not be null.");
 
         // when
-        new LoggingEventLoggerNameMatcher(null);
+        wasLoggedBy(loggerName);
+    }
+
+    @Test
+    public void nullLoggerTypeCausesIllegalArgumentException() {
+
+        // given
+        final Class<?> loggerType = null;
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerType must not be null.");
+
+        // when
+        wasLoggedBy(loggerType);
     }
 
     @Test
     public void matchesWhenGivenLoggerNameEqualsEventLoggerName() {
 
         // given
-        final LoggingEventLoggerNameMatcher matcher = new LoggingEventLoggerNameMatcher("foo");
+        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLoggerName("foo");
 
@@ -55,7 +75,7 @@ public class LoggingEventLoggerNameMatcherTest {
     public void doesNotMatchWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
 
         // given
-        final LoggingEventLoggerNameMatcher matcher = new LoggingEventLoggerNameMatcher("foo");
+        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLoggerName("bar");
 
@@ -69,7 +89,7 @@ public class LoggingEventLoggerNameMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final LoggingEventLoggerNameMatcher matcher = new LoggingEventLoggerNameMatcher("foo");
+        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLoggerName("bar");
         matcher.matches(loggingEvent);

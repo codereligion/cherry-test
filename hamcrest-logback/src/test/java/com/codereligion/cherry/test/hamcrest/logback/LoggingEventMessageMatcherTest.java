@@ -15,6 +15,7 @@
  */
 package com.codereligion.cherry.test.hamcrest.logback;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
@@ -22,6 +23,7 @@ import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventMessageMatcher.hasMessage;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -38,7 +40,7 @@ public class LoggingEventMessageMatcherTest {
         expectedException.expectMessage("matcher must not be null.");
 
         // when
-        new LoggingEventMessageMatcher(null);
+        hasMessage(null);
     }
 
     @Test
@@ -46,7 +48,7 @@ public class LoggingEventMessageMatcherTest {
 
         // given
         final Matcher<String> matcher = CoreMatchers.containsString("foo");
-        final LoggingEventMessageMatcher loggingEventMessageMatcher = new LoggingEventMessageMatcher(matcher);
+        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setMessage("foo");
 
@@ -59,7 +61,7 @@ public class LoggingEventMessageMatcherTest {
 
         // given
         final Matcher<String> matcher = CoreMatchers.containsString("foo");
-        final LoggingEventMessageMatcher loggingEventMessageMatcher = new LoggingEventMessageMatcher(matcher);
+        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setMessage("bar");
 
@@ -74,7 +76,7 @@ public class LoggingEventMessageMatcherTest {
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
         final Matcher<String> matcher = CoreMatchers.containsString("foo");
-        final LoggingEventMessageMatcher loggingEventMessageMatcher = new LoggingEventMessageMatcher(matcher);
+        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setMessage("bar");
         loggingEventMessageMatcher.matches(loggingEvent);

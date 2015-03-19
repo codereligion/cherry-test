@@ -27,12 +27,28 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class LoggingEventLoggerNameMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
 
-    public static Matcher<ILoggingEvent> usesLogger(final String loggerName) {
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
+     * loggerName} equal to the given one.
+     *
+     * @param loggerName the name of the loggerName to match the event's logger with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
+    public static Matcher<ILoggingEvent> wasLoggedBy(final String loggerName) {
         return new LoggingEventLoggerNameMatcher(loggerName);
     }
 
-    public static Matcher<ILoggingEvent> usesLogger(final Class<?> type) {
-        return new LoggingEventLoggerNameMatcher(type.getName());
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
+     * loggerName} equal to the name of the given class.
+     *
+     * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
+    public static Matcher<ILoggingEvent> wasLoggedBy(final Class<?> loggerType) {
+        return new LoggingEventLoggerNameMatcher(loggerType);
     }
 
     private final String loggerName;
@@ -40,12 +56,23 @@ public class LoggingEventLoggerNameMatcher extends DescribingTypeSafeMatcher<ILo
     /**
      * Creates a new instance using the given {@code loggerName}.
      *
-     * @param loggerName the name of the logger to match the events logger with
+     * @param loggerName the name of the loggerName to match the event's loggerName with
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    public LoggingEventLoggerNameMatcher(final String loggerName) {
+    private LoggingEventLoggerNameMatcher(final String loggerName) {
         checkArgument(loggerName != null, "loggerName must not be null.");
         this.loggerName = loggerName;
+    }
+
+    /**
+     * Creates a new instance using the name of the given {@code loggerType}.
+     *
+     * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
+    private LoggingEventLoggerNameMatcher(final Class<?> loggerType) {
+        checkArgument(loggerType != null, "loggerType must not be null.");
+        this.loggerName = loggerType.getName();
     }
 
     @Override
