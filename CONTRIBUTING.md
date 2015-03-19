@@ -11,7 +11,7 @@ To develop this project you should have the following setup:
 * Maven 3.2.2 or higher
 
 ### Build
-We use Jenkins CI to run [our builds](http://jenkins.codereligion.com/view/codereligion-cherry-collect/job/codereligion-cherry-collect-master-build-flow/).
+We use Jenkins CI to run [our builds](http://jenkins.codereligion.com/view/codereligion-cherry-collect/job/codereligion-cherry-test-master-build-flow/).
 
 #### Java version compliance
 The byte code is and should be compliant to all Java versions starting and including 1.6.

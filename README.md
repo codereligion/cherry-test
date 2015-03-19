@@ -10,3 +10,6 @@ For usages and maven central links see respective READMEs:
 * [hamcrest-logback](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback/README.md)
 * [junit-joda-time](https://github.com/codereligion/cherry-test/blob/master/junit-joda-time/README.md)
 * [junit-logback](https://github.com/codereligion/cherry-test/blob/master/junit-logback/README.md)
+
+## Attributions
+The cherry icon originated from www.vector4free.com and is distributed under the [Creative Commons 4.0 License](http://creativecommons.org/licenses/by/4.0/)
