@@ -34,21 +34,6 @@ public class TimeMachine implements TestRule {
 
     @Override
     public Statement apply(final Statement base, final Description description) {
-        return statement(base);
-    }
-
-    public void goToAndStayAt(final long millis) {
-        DateTimeUtils.setCurrentMillisFixed(millis);
-    }
-
-    public void goToAndStayAt(final DateTime dateTime) {
-
-        checkArgument(dateTime != null, "dateTime must not be null.");
-
-        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
-    }
-
-    private Statement statement(final Statement base) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -60,5 +45,25 @@ public class TimeMachine implements TestRule {
             }
         };
     }
-}
 
+    /**
+     * Goes to and stays at the specified time in millis.
+     *
+     * @param millis the milliseconds since epoch to go to and stay
+     */
+    public void goToAndStayAt(final long millis) {
+        DateTimeUtils.setCurrentMillisFixed(millis);
+    }
+
+    /**
+     * Goes to and stays at the specified {@link org.joda.time.DateTime}.
+     *
+     * @param dateTime the object which specifies the date and time to go to and stay
+     */
+    public void goToAndStayAt(final DateTime dateTime) {
+
+        checkArgument(dateTime != null, "dateTime must not be null.");
+
+        DateTimeUtils.setCurrentMillisFixed(dateTime.getMillis());
+    }
+}

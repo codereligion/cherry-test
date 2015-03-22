@@ -19,7 +19,8 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
- * Abstract {@link TypeSafeMatcher} which unifies describing expected and actual message.
+ * Abstract {@link TypeSafeMatcher} which unifies the expected and actual message by using the same message type but different values to reflect the respective
+ * states.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 18.03.2015

@@ -67,10 +67,20 @@ public class LogSpec {
         this.logger = (Logger) LoggerFactory.getLogger(loggerName);
     }
 
+    /**
+     * The {@link ch.qos.logback.classic.Level} associated witht this spec.
+     *
+     * @return the level
+     */
     public Level getLevel() {
         return level;
     }
 
+    /**
+     * The {@link ch.qos.logback.classic.Logger} associated with this spec.
+     *
+     * @return the logger
+     */
     public Logger getLogger() {
         return logger;
     }

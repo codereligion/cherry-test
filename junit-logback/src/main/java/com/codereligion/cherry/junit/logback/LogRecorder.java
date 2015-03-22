@@ -63,29 +63,6 @@ public class LogRecorder implements TestRule {
 
     @Override
     public Statement apply(final Statement base, final Description description) {
-        return statement(base);
-    }
-
-    /**
-     * @return all recorded events
-     */
-    public List<ILoggingEvent> events() {
-        return listAppender.list;
-    }
-
-    /**
-     * @return the first recorded event
-     * @throws LogRecorderException when no event was recorded
-     */
-    public ILoggingEvent event() {
-        if (listAppender.list.isEmpty()) {
-            throw new LogRecorderException("No event was recorded during the test execution.");
-        }
-
-        return listAppender.list.get(0);
-    }
-
-    private Statement statement(final Statement base) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -97,6 +74,29 @@ public class LogRecorder implements TestRule {
                 }
             }
         };
+    }
+
+    /**
+     * Returns all events recorded during the test execution in the order they were logged.
+     *
+     * @return all recorded events
+     */
+    public List<ILoggingEvent> events() {
+        return listAppender.list;
+    }
+
+    /**
+     * Returns the first event recorded during the test execution, or throws an {@link java.lang.AssertionError}, in case no event was recorded.
+     *
+     * @return the first recorded event
+     * @throws java.lang.AssertionError when no event was recorded
+     */
+    public ILoggingEvent event() {
+        if (listAppender.list.isEmpty()) {
+            throw new AssertionError("No event was recorded during the test execution.");
+        }
+
+        return listAppender.list.get(0);
     }
 
     private void before() throws Throwable {

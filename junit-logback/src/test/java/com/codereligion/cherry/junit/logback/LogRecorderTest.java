@@ -142,7 +142,8 @@ public class LogRecorderTest {
         logRecorder.apply(mock(Statement.class), Description.EMPTY).evaluate();
 
         // expect
-        expectedException.expect(LogRecorderException.class);
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("No event was recorded during the test execution.");
 
         // when
         logRecorder.event();
