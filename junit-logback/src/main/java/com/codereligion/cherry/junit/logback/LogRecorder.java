@@ -61,6 +61,7 @@ public class LogRecorder implements TestRule {
         checkArgument(!this.logSpecs.contains(null), "logSpec must not be null.");
     }
 
+    @Override
     public Statement apply(final Statement base, final Description description) {
         return statement(base);
     }
