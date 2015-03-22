@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLoggerNameMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
+public class LoggingEventLoggerNameMatcher extends AbstractDescribingMatcher<ILoggingEvent> {
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code

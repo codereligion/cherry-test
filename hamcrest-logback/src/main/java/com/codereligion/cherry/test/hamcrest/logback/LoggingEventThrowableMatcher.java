@@ -17,6 +17,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
+import com.google.common.base.Objects;
 import org.hamcrest.Matcher;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.not;
@@ -31,7 +32,7 @@ import static org.hamcrest.Matchers.not;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventThrowableMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
+public class LoggingEventThrowableMatcher extends AbstractDescribingMatcher<ILoggingEvent> {
 
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
         return new LoggingEventThrowableMatcher(throwable);
@@ -65,12 +66,8 @@ public class LoggingEventThrowableMatcher extends DescribingTypeSafeMatcher<ILog
         }
 
         final boolean classesMatch = throwableProxy.getClassName().equals(throwable.getClass().getName());
-        final boolean messagesMatch = messageMatch(throwableProxy.getMessage(), throwable.getMessage());
+        final boolean messagesMatch = Objects.equal(throwableProxy.getMessage(), throwable.getMessage());
         return classesMatch && messagesMatch;
-    }
-
-    private boolean messageMatch(final String first, final String second) {
-        return first == second || (first != null && first.equals(second));
     }
 
     @Override

@@ -27,7 +27,7 @@ import static org.hamcrest.CoreMatchers.everyItem;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLevelMatcher extends DescribingTypeSafeMatcher<ILoggingEvent> {
+public class LoggingEventLevelMatcher extends AbstractDescribingMatcher<ILoggingEvent> {
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
