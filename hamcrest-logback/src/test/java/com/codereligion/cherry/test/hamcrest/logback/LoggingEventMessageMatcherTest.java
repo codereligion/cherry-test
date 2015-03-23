@@ -86,8 +86,7 @@ public class LoggingEventMessageMatcherTest {
         loggingEventMessageMatcher.describeMismatch(loggingEvent, missMatchDescription);
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent with a message matching: a string containing \"foo\""));
-        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with message: bar"));
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with a formattedMessage matching: a string containing \"foo\""));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='bar', loggedBy=null, throwable=null}"));
     }
-
 }

@@ -25,7 +25,7 @@ import org.hamcrest.TypeSafeMatcher;
  * @author Sebastian Gr&ouml;bler
  * @since 18.03.2015
  */
-abstract class AbstractDescribingMatcher<T> extends TypeSafeMatcher<T> {
+public abstract class AbstractDescribingMatcher<T> extends TypeSafeMatcher<T> {
 
     @Override
     public void describeTo(final Description description) {

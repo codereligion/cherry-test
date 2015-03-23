@@ -19,7 +19,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.hamcrest.Matcher;
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.hamcrest.CoreMatchers.everyItem;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to be of the specified {@code level}.
@@ -37,20 +36,8 @@ public class LoggingEventLevelMatcher extends AbstractDescribingMatcher<ILogging
      * @return a new matcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    public static Matcher<ILoggingEvent> hasLevel(final Level level) {
+    public static Matcher<ILoggingEvent> level(final Level level) {
         return new LoggingEventLevelMatcher(level);
-    }
-
-    /**
-     * Creates a new matcher for {@link Iterable Iterables} that only matches when a single pass over the examined {@link Iterable} yields items that are all
-     * matched by the {@link LoggingEventLevelMatcher} using the given {@link ch.qos.logback.classic.Level}.
-     *
-     * @param level the level to match the iterable items against
-     * @return a new matcher
-     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
-     */
-    public static Matcher<Iterable<ILoggingEvent>> everyItemHasLevel(final Level level) {
-        return everyItem(hasLevel(level));
     }
 
     private final Level level;
