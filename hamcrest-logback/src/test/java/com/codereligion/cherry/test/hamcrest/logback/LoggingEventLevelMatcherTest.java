@@ -23,7 +23,7 @@ import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.level;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.hasLevel;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -40,14 +40,14 @@ public class LoggingEventLevelMatcherTest {
         expectedException.expectMessage("level must not be null.");
 
         // when
-        level(null);
+        hasLevel(null);
     }
 
     @Test
     public void matchesWhenGivenLevelEqualsEventLevel() {
 
         // given
-        final Matcher<ILoggingEvent> matcher = level(Level.ERROR);
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLevel(Level.ERROR);
 
@@ -59,7 +59,7 @@ public class LoggingEventLevelMatcherTest {
     public void doesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
 
         // given
-        final Matcher<ILoggingEvent> matcher = level(Level.ERROR);
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLevel(Level.INFO);
 
@@ -73,7 +73,7 @@ public class LoggingEventLevelMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final Matcher<ILoggingEvent> matcher = level(Level.ERROR);
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
         loggingEvent.setLevel(Level.INFO);
         matcher.matches(loggingEvent);
@@ -84,6 +84,6 @@ public class LoggingEventLevelMatcherTest {
 
         // then
         assertThat(matchDescription.toString(), is("an ILoggingEvent with level: ERROR"));
-        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with level: INFO"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}"));
     }
 }

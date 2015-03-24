@@ -17,6 +17,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -26,7 +27,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLevelMatcher extends AbstractDescribingMatcher<ILoggingEvent> {
+public class LoggingEventLevelMatcher extends AbstractILoggingEventDescribingMatcher {
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
@@ -36,9 +37,18 @@ public class LoggingEventLevelMatcher extends AbstractDescribingMatcher<ILogging
      * @return a new matcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    public static Matcher<ILoggingEvent> level(final Level level) {
-        return new LoggingEventLevelMatcher(level);
+    public static Matcher<ILoggingEvent> hasLevel(final Level level) {
+        return new LoggingEventLevelMatcher(level, true, false);
     }
+
+    public static Matcher<ILoggingEvent> doesNotHaveLevel(final Level level) {
+        return new LoggingEventLevelMatcher(level, false, false);
+    }
+
+    public static Matcher<ILoggingEvent> withLevel(final Level level) {
+        return new LoggingEventLevelMatcher(level, true, true);
+    }
+
 
     private final Level level;
 
@@ -48,28 +58,24 @@ public class LoggingEventLevelMatcher extends AbstractDescribingMatcher<ILogging
      * @param level the level to match the event's log level against.
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLevelMatcher(final Level level) {
+    private LoggingEventLevelMatcher(final Level level, final boolean shouldMatch, final boolean isIterableMatcher) {
+        super(shouldMatch, isIterableMatcher);
         checkArgument(level != null, "level must not be null.");
         this.level = level;
     }
 
     @Override
-    public boolean matchesSafely(final ILoggingEvent event) {
+    protected boolean internalMatches(final ILoggingEvent event) {
         return event.getLevel().equals(level);
     }
 
     @Override
-    protected String getMessage(final Object object) {
-        return "an ILoggingEvent with level: " + object;
+    protected void describePositiveMatch(final Description description) {
+        description.appendText("an ILoggingEvent with level: " + level);
     }
 
     @Override
-    protected Object getActualValue(final ILoggingEvent item) {
-        return item.getLevel();
-    }
-
-    @Override
-    protected Object getExpectedValue() {
-        return level;
+    protected void describeNegativeMatch(final Description description) {
+        description.appendText("an ILoggingEvent with level other than: " + level);
     }
 }

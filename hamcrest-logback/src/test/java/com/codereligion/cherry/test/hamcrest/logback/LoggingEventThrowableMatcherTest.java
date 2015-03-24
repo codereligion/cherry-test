@@ -137,7 +137,7 @@ public class LoggingEventThrowableMatcherTest {
 
         // then
         assertThat(matchDescription.toString(), is("an ILoggingEvent with a throwable matching: null"));
-        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with a throwable matching: null"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=null}"));
     }
 
     @Test
@@ -157,7 +157,7 @@ public class LoggingEventThrowableMatcherTest {
 
         // then
         assertThat(matchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.IllegalArgumentException[foo]"));
-        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.NullPointerException[bar]"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=java.lang.NullPointerException{message='bar'}}"));
     }
 
     @Test
@@ -177,6 +177,6 @@ public class LoggingEventThrowableMatcherTest {
 
         // then
         assertThat(matchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.IllegalArgumentException[null]"));
-        assertThat(missMatchDescription.toString(), is("an ILoggingEvent with a throwable matching: java.lang.NullPointerException[null]"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=java.lang.NullPointerException{message='null'}}"));
     }
 }

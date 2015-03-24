@@ -16,6 +16,7 @@
 package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -25,7 +26,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLoggerNameMatcher extends AbstractDescribingMatcher<ILoggingEvent> {
+public class LoggingEventLoggerNameMatcher extends AbstractILoggingEventDescribingMatcher {
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
@@ -36,7 +37,19 @@ public class LoggingEventLoggerNameMatcher extends AbstractDescribingMatcher<ILo
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> wasLoggedBy(final String loggerName) {
-        return new LoggingEventLoggerNameMatcher(loggerName);
+        return new LoggingEventLoggerNameMatcher(loggerName, true, false);
+    }
+
+    public static Matcher<ILoggingEvent> wasNotLoggedBy(final String loggerName) {
+        return new LoggingEventLoggerNameMatcher(loggerName, false, false);
+    }
+
+    public static Matcher<ILoggingEvent> loggedBy(final String loggerName) {
+        return new LoggingEventLoggerNameMatcher(loggerName, true, true);
+    }
+
+    public static Matcher<ILoggingEvent> notLoggedBy(final String loggerName) {
+        return new LoggingEventLoggerNameMatcher(loggerName, false, true);
     }
 
     /**
@@ -48,7 +61,15 @@ public class LoggingEventLoggerNameMatcher extends AbstractDescribingMatcher<ILo
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> wasLoggedBy(final Class<?> loggerType) {
-        return new LoggingEventLoggerNameMatcher(loggerType);
+        return new LoggingEventLoggerNameMatcher(loggerType, true, false);
+    }
+
+    public static Matcher<ILoggingEvent> wasNotLoggedBy(final Class<?> loggerType) {
+        return new LoggingEventLoggerNameMatcher(loggerType, false, false);
+    }
+
+    public static Matcher<ILoggingEvent> loggedBy(final Class<?> loggerType) {
+        return new LoggingEventLoggerNameMatcher(loggerType, true, true);
     }
 
     private final String loggerName;
@@ -57,9 +78,12 @@ public class LoggingEventLoggerNameMatcher extends AbstractDescribingMatcher<ILo
      * Creates a new instance using the given {@code loggerName}.
      *
      * @param loggerName the name of the loggerName to match the event's loggerName with
+     * @param shouldMatch
+     * @param isIterableMatcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLoggerNameMatcher(final String loggerName) {
+    private LoggingEventLoggerNameMatcher(final String loggerName, final boolean shouldMatch, final boolean isIterableMatcher) {
+        super(shouldMatch, isIterableMatcher);
         checkArgument(loggerName != null, "loggerName must not be null.");
         this.loggerName = loggerName;
     }
@@ -70,28 +94,25 @@ public class LoggingEventLoggerNameMatcher extends AbstractDescribingMatcher<ILo
      * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLoggerNameMatcher(final Class<?> loggerType) {
+    private LoggingEventLoggerNameMatcher(final Class<?> loggerType, final boolean shouldMatch, final boolean isIterableMatcher) {
+        super(shouldMatch, isIterableMatcher);
         checkArgument(loggerType != null, "loggerType must not be null.");
         this.loggerName = loggerType.getName();
     }
 
+
     @Override
-    public boolean matchesSafely(final ILoggingEvent event) {
+    protected boolean internalMatches(final ILoggingEvent event) {
         return event.getLoggerName().equals(loggerName);
     }
 
     @Override
-    protected String getMessage(final Object object) {
-        return "an ILoggingEvent for logger with name: " + object;
+    protected void describePositiveMatch(final Description description) {
+        description.appendText("an ILoggingEvent logged by: " + loggerName);
     }
 
     @Override
-    protected Object getActualValue(final ILoggingEvent item) {
-        return item.getLoggerName();
-    }
-
-    @Override
-    protected Object getExpectedValue() {
-        return loggerName;
+    protected void describeNegativeMatch(final Description description) {
+        description.appendText("an ILoggingEvent not logged by: " + loggerName);
     }
 }

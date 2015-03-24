@@ -18,9 +18,9 @@ package com.codereligion.cherry.test.hamcrest.logback;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import com.google.common.base.Objects;
+import javax.annotation.Nullable;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.Matchers.not;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to contain the specified {@link Throwable}.
@@ -32,34 +32,34 @@ import static org.hamcrest.Matchers.not;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventThrowableMatcher extends AbstractDescribingMatcher<ILoggingEvent> {
+public class LoggingEventThrowableMatcher extends AbstractILoggingEventDescribingMatcher {
 
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
-        return new LoggingEventThrowableMatcher(throwable);
+        return new LoggingEventThrowableMatcher(throwable, true, false);
     }
 
     public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
-        return not(hasThrowable(throwable));
+        return new LoggingEventThrowableMatcher(throwable, false, false);
     }
 
-    public static Matcher<Iterable<? super ILoggingEvent>> hasItemWithThrowable(final Throwable throwable) {
-        return hasItem(hasThrowable(throwable));
+    public static Matcher<ILoggingEvent> withThrowable(final Throwable throwable) {
+        return new LoggingEventThrowableMatcher(throwable, true, true);
     }
 
-    private Throwable throwable;
+    private final Throwable throwable;
 
     /**
      * Creates a new instance using the given {@link java.lang.Throwable}.
      *
      * @param throwable the throwable to match the event's {@code throwableProxy} with
      */
-    private LoggingEventThrowableMatcher(final Throwable throwable) {
+    private LoggingEventThrowableMatcher(@Nullable final Throwable throwable, final boolean shouldMatch, final boolean isIterableMatcher) {
+        super(shouldMatch, isIterableMatcher);
         this.throwable = throwable;
     }
 
     @Override
-    public boolean matchesSafely(final ILoggingEvent event) {
-
+    protected boolean internalMatches(final ILoggingEvent event) {
         final IThrowableProxy throwableProxy = event.getThrowableProxy();
         if (throwableProxy == null || throwable == null) {
             return throwableProxy == throwable;
@@ -71,24 +71,16 @@ public class LoggingEventThrowableMatcher extends AbstractDescribingMatcher<ILog
     }
 
     @Override
-    protected String getMessage(final Object object) {
-        return "an ILoggingEvent with a throwable matching: " + object;
+    protected void describePositiveMatch(final Description description) {
+        description.appendText("an ILoggingEvent with a throwable matching: " + toString(throwable));
     }
 
     @Override
-    protected Object getActualValue(final ILoggingEvent item) {
-
-        final IThrowableProxy throwableProxy = item.getThrowableProxy();
-
-        if (throwableProxy == null) {
-            return "null";
-        }
-
-        return throwableProxy.getClassName() + "[" + throwableProxy.getMessage() + "]";
+    protected void describeNegativeMatch(final Description description) {
+        description.appendText("an ILoggingEvent with a throwable matching: " + toString(throwable));
     }
 
-    @Override
-    protected Object getExpectedValue() {
+    private String toString(final Throwable throwable) {
         if (throwable == null) {
             return "null";
         }

@@ -99,7 +99,7 @@ public class LoggingEventLoggerNameMatcherTest {
         matcher.describeMismatch(loggingEvent, missMatchDescription);
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent for logger with name: foo"));
-        assertThat(missMatchDescription.toString(), is("an ILoggingEvent for logger with name: bar"));
+        assertThat(matchDescription.toString(), is("an ILoggingEvent logged by: foo"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}"));
     }
 }
