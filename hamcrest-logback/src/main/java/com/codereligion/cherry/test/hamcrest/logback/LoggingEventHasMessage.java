@@ -28,7 +28,7 @@ import static org.hamcrest.CoreMatchers.containsString;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventMessageMatcher extends AbstractILoggingEventDescribingMatcher {
+public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatcher {
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code message}
@@ -39,15 +39,15 @@ public class LoggingEventMessageMatcher extends AbstractILoggingEventDescribingM
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> hasMessage(final Matcher<String> matcher) {
-        return new LoggingEventMessageMatcher(matcher, true, false);
+        return new LoggingEventHasMessage(matcher, true, false);
     }
 
     public static Matcher<ILoggingEvent> withMessage(final Matcher<String> matcher) {
-        return new LoggingEventMessageMatcher(matcher, true, true);
+        return new LoggingEventHasMessage(matcher, true, true);
     }
 
     public static Matcher<ILoggingEvent> doesNotHaveMessage(final Matcher<String> matcher) {
-        return new LoggingEventMessageMatcher(matcher, false, false);
+        return new LoggingEventHasMessage(matcher, false, false);
     }
 
     public static Matcher<ILoggingEvent> hasMessage(final String message, final Object... args) {
@@ -88,7 +88,7 @@ public class LoggingEventMessageMatcher extends AbstractILoggingEventDescribingM
      * @param isIterableMatcher if the matcher is used as part of an iterable matching
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventMessageMatcher(final Matcher<String> matcher, final boolean shouldMatch, final boolean isIterableMatcher) {
+    private LoggingEventHasMessage(final Matcher<String> matcher, final boolean shouldMatch, final boolean isIterableMatcher) {
         super(shouldMatch, isIterableMatcher);
         checkArgument(matcher != null, "matcher must not be null.");
         this.matcher = matcher;

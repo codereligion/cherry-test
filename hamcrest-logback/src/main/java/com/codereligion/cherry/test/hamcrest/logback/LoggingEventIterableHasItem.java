@@ -26,17 +26,23 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  * @author Sebastian Gr&ouml;bler
  * @since 23.03.2015
  */
-public class LoggingEventIterableMatcher extends TypeSafeDiagnosingMatcher<Iterable<ILoggingEvent>> {
+public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Iterable<ILoggingEvent>> {
 
 
     public static Matcher<Iterable<ILoggingEvent>> hasItem(final Matcher<ILoggingEvent> itemMatcher) {
-        return new LoggingEventIterableMatcher(itemMatcher);
+        return new LoggingEventIterableHasItem(itemMatcher, true);
+    }
+
+    public static Matcher<Iterable<ILoggingEvent>> hasNoItem(final Matcher<ILoggingEvent> itemMatcher) {
+        return new LoggingEventIterableHasItem(itemMatcher, false);
     }
 
     private final Matcher<ILoggingEvent> elementMatcher;
+    private final boolean shouldMatch;
 
-    public LoggingEventIterableMatcher(Matcher<ILoggingEvent> elementMatcher) {
+    public LoggingEventIterableHasItem(final Matcher<ILoggingEvent> elementMatcher, final boolean shouldMatch) {
         this.elementMatcher = elementMatcher;
+        this.shouldMatch = shouldMatch;
     }
 
     @Override
@@ -47,7 +53,7 @@ public class LoggingEventIterableMatcher extends TypeSafeDiagnosingMatcher<Itera
         boolean isPastFirst = false;
         for (final Object item : collection) {
             if (elementMatcher.matches(item)) {
-                return true;
+                return shouldMatch;
             }
             if (isPastFirst) {
                 mismatchDescription.appendText(", ");
@@ -57,7 +63,7 @@ public class LoggingEventIterableMatcher extends TypeSafeDiagnosingMatcher<Itera
         }
 
         mismatchDescription.appendText("]");
-        return false;
+        return !shouldMatch;
     }
 
     @Override

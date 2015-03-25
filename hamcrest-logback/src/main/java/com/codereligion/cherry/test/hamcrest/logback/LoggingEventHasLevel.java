@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventLevelMatcher extends AbstractILoggingEventDescribingMatcher {
+public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher {
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
@@ -38,15 +38,15 @@ public class LoggingEventLevelMatcher extends AbstractILoggingEventDescribingMat
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> hasLevel(final Level level) {
-        return new LoggingEventLevelMatcher(level, true, false);
+        return new LoggingEventHasLevel(level, true, false);
     }
 
     public static Matcher<ILoggingEvent> doesNotHaveLevel(final Level level) {
-        return new LoggingEventLevelMatcher(level, false, false);
+        return new LoggingEventHasLevel(level, false, false);
     }
 
     public static Matcher<ILoggingEvent> withLevel(final Level level) {
-        return new LoggingEventLevelMatcher(level, true, true);
+        return new LoggingEventHasLevel(level, true, true);
     }
 
 
@@ -58,7 +58,7 @@ public class LoggingEventLevelMatcher extends AbstractILoggingEventDescribingMat
      * @param level the level to match the event's log level against.
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLevelMatcher(final Level level, final boolean shouldMatch, final boolean isIterableMatcher) {
+    private LoggingEventHasLevel(final Level level, final boolean shouldMatch, final boolean isIterableMatcher) {
         super(shouldMatch, isIterableMatcher);
         checkArgument(level != null, "level must not be null.");
         this.level = level;

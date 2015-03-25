@@ -21,11 +21,11 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventThrowableMatcher.hasThrowable;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.hasThrowable;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LoggingEventThrowableMatcherTest {
+public class LoggingEventHasThrowableTest {
 
     @Test
     public void matchesWhenBothThrowablesAreNull() {

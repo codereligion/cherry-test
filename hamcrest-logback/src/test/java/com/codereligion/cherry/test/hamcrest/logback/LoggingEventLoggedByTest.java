@@ -17,56 +17,70 @@ package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventMessageMatcher.hasMessage;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.wasLoggedBy;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LoggingEventMessageMatcherTest {
+public class LoggingEventLoggedByTest {
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void nullMessageCausesIllegalArgumentException() {
+    public void nullLoggerNameCausesIllegalArgumentException() {
+
+        // given
+        final String loggerName = null;
 
         // expect
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("matcher must not be null.");
+        expectedException.expectMessage("loggerName must not be null.");
 
         // when
-        hasMessage(null);
+        wasLoggedBy(loggerName);
     }
 
     @Test
-    public void matchesWhenGivenMatcherMatchesEventMessage() {
+    public void nullLoggerTypeCausesIllegalArgumentException() {
 
         // given
-        final Matcher<String> matcher = CoreMatchers.containsString("foo");
-        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setMessage("foo");
+        final Class<?> loggerType = null;
 
-        // then
-        assertThat(loggingEventMessageMatcher.matches(loggingEvent), is(true));
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerType must not be null.");
+
+        // when
+        wasLoggedBy(loggerType);
     }
 
     @Test
-    public void doesNotMatchWhenGivenMatcherDoesNotMatchEventMessage() {
+    public void matchesWhenGivenLoggerNameEqualsEventLoggerName() {
 
         // given
-        final Matcher<String> matcher = CoreMatchers.containsString("foo");
-        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
+        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setMessage("bar");
+        loggingEvent.setLoggerName("foo");
 
         // then
-        assertThat(loggingEventMessageMatcher.matches(loggingEvent), is(false));
+        assertThat(matcher.matches(loggingEvent), is(true));
+    }
+
+    @Test
+    public void doesNotMatchWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
+
+        // given
+        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
+        final LoggingEvent loggingEvent = new LoggingEvent();
+        loggingEvent.setLoggerName("bar");
+
+        // then
+        assertThat(matcher.matches(loggingEvent), is(false));
     }
 
     @Test
@@ -75,18 +89,17 @@ public class LoggingEventMessageMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final Matcher<String> matcher = CoreMatchers.containsString("foo");
-        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
+        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setMessage("bar");
-        loggingEventMessageMatcher.matches(loggingEvent);
+        loggingEvent.setLoggerName("bar");
+        matcher.matches(loggingEvent);
 
         // when
-        loggingEventMessageMatcher.describeTo(matchDescription);
-        loggingEventMessageMatcher.describeMismatch(loggingEvent, missMatchDescription);
+        matcher.describeTo(matchDescription);
+        matcher.describeMismatch(loggingEvent, missMatchDescription);
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent with a formattedMessage matching: a string containing \"foo\""));
-        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='bar', loggedBy=null, throwable=null}"));
+        assertThat(matchDescription.toString(), is("an ILoggingEvent logged by: foo"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}"));
     }
 }

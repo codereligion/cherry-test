@@ -22,23 +22,24 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.junit.Test;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventIterableMatcher.hasItem;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.doesNotHaveLevel;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.hasLevel;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.withLevel;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggerNameMatcher.loggedBy;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggerNameMatcher.wasLoggedBy;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggerNameMatcher.wasNotLoggedBy;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventMessageMatcher.doesNotHaveMessage;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventMessageMatcher.hasMessage;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventMessageMatcher.withMessage;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventThrowableMatcher.doesNotHaveThrowable;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventThrowableMatcher.hasThrowable;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventThrowableMatcher.withThrowable;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.doesNotHaveLevel;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.hasLevel;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.withLevel;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.doesNotHaveMessage;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.hasMessage;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.withMessage;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.doesNotHaveThrowable;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.hasThrowable;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.withThrowable;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventIterableHasItem.hasItem;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventIterableHasItem.hasNoItem;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.loggedBy;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.wasLoggedBy;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.wasNotLoggedBy;
 import static org.junit.Assert.assertThat;
 
 /**
- * TODO document
+ * TODO move iterable test to respective test classes, kill the others
  * TODO assertMessages (think if this should be done here or in the individual tests
  *
  * @author Sebastian Gr&ouml;bler
@@ -74,11 +75,36 @@ public class IntegrationTest {
     }
 
     @Test
-    public void failingDoesNotHaveItemWithLevel() {
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.ERROR);
+    public void hasItemWithLevel() {
+        final LoggingEvent first = new LoggingEvent();
+        first.setLevel(Level.INFO);
+        final LoggingEvent second = new LoggingEvent();
+        second.setLevel(Level.ERROR);
+        final List<ILoggingEvent> events = Lists.<ILoggingEvent>newArrayList(first, second);
 
-        // TODO
+        assertThat(events, hasItem(withLevel(Level.ERROR)));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void failingHasNoItemWithLevel() {
+        final LoggingEvent first = new LoggingEvent();
+        first.setLevel(Level.ERROR);
+        final LoggingEvent second = new LoggingEvent();
+        second.setLevel(Level.WARN);
+        final List<ILoggingEvent> events = Lists.<ILoggingEvent>newArrayList(first, second);
+
+        assertThat(events, hasNoItem(withLevel(Level.ERROR)));
+    }
+
+    @Test
+    public void hasNoItemWithLevel() {
+        final LoggingEvent first = new LoggingEvent();
+        first.setLevel(Level.INFO);
+        final LoggingEvent second = new LoggingEvent();
+        second.setLevel(Level.WARN);
+        final List<ILoggingEvent> events = Lists.<ILoggingEvent>newArrayList(first, second);
+
+        assertThat(events, hasNoItem(withLevel(Level.ERROR)));
     }
 
     @Test(expected = AssertionError.class)
@@ -108,15 +134,15 @@ public class IntegrationTest {
         assertThat(events, hasItem(withMessage("bar")));
     }
 
-    @Test
-    public void failingDoesNotHaveItemWithMessage() {
+    @Test(expected = AssertionError.class)
+    public void failingHasNoItemWithMessage() {
         final LoggingEvent first = new LoggingEvent();
         first.setMessage("foo");
         final LoggingEvent second = new LoggingEvent();
         second.setMessage("bar");
         final List<ILoggingEvent> events = Lists.<ILoggingEvent>newArrayList(first, second);
 
-        // TODO
+        assertThat(events, hasNoItem(withMessage("bar")));
     }
 
     @Test(expected = AssertionError.class)
@@ -146,12 +172,15 @@ public class IntegrationTest {
         assertThat(events, hasItem(withThrowable(new NullPointerException())));
     }
 
-    @Test
-    public void failingDoesNotHaveItemThrowable() {
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.INFO);
+    @Test (expected = AssertionError.class)
+    public void failingHasNoItemWithThrowable() {
+        final LoggingEvent first = new LoggingEvent();
+        first.setThrowableProxy(new ThrowableProxy(new IllegalArgumentException()));
+        final LoggingEvent second = new LoggingEvent();
+        second.setThrowableProxy(new ThrowableProxy(new NullPointerException()));
+        final List<ILoggingEvent> events = Lists.<ILoggingEvent>newArrayList(first, second);
 
-        // TODO
+        assertThat(events, hasNoItem(withThrowable(new NullPointerException())));
     }
 
     @Test(expected = AssertionError.class)
@@ -181,11 +210,14 @@ public class IntegrationTest {
         assertThat(events, hasItem(loggedBy("baz")));
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void failingHasItemNotLoggedBy() {
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.INFO);
+        final LoggingEvent first = new LoggingEvent();
+        first.setLoggerName("foo");
+        final LoggingEvent second = new LoggingEvent();
+        second.setLoggerName("bar");
+        final List<ILoggingEvent> events = Lists.<ILoggingEvent>newArrayList(first, second);
 
-        // TODO
+        assertThat(events, hasNoItem(loggedBy("bar")));
     }
 }

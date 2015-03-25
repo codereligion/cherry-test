@@ -32,18 +32,18 @@ import org.hamcrest.Matcher;
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
  */
-public class LoggingEventThrowableMatcher extends AbstractILoggingEventDescribingMatcher {
+public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMatcher {
 
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
-        return new LoggingEventThrowableMatcher(throwable, true, false);
+        return new LoggingEventHasThrowable(throwable, true, false);
     }
 
     public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
-        return new LoggingEventThrowableMatcher(throwable, false, false);
+        return new LoggingEventHasThrowable(throwable, false, false);
     }
 
     public static Matcher<ILoggingEvent> withThrowable(final Throwable throwable) {
-        return new LoggingEventThrowableMatcher(throwable, true, true);
+        return new LoggingEventHasThrowable(throwable, true, true);
     }
 
     private final Throwable throwable;
@@ -53,7 +53,7 @@ public class LoggingEventThrowableMatcher extends AbstractILoggingEventDescribin
      *
      * @param throwable the throwable to match the event's {@code throwableProxy} with
      */
-    private LoggingEventThrowableMatcher(@Nullable final Throwable throwable, final boolean shouldMatch, final boolean isIterableMatcher) {
+    private LoggingEventHasThrowable(@Nullable final Throwable throwable, final boolean shouldMatch, final boolean isIterableMatcher) {
         super(shouldMatch, isIterableMatcher);
         this.throwable = throwable;
     }

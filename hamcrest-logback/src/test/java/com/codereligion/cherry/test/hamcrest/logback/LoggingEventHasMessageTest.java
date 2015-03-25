@@ -15,56 +15,58 @@
  */
 package com.codereligion.cherry.test.hamcrest.logback;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLevelMatcher.hasLevel;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.hasMessage;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LoggingEventLevelMatcherTest {
+public class LoggingEventHasMessageTest {
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void nullLevelCausesIllegalArgumentException() {
+    public void nullMessageCausesIllegalArgumentException() {
 
         // expect
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("level must not be null.");
+        expectedException.expectMessage("matcher must not be null.");
 
         // when
-        hasLevel(null);
+        hasMessage(null);
     }
 
     @Test
-    public void matchesWhenGivenLevelEqualsEventLevel() {
+    public void matchesWhenGivenMatcherMatchesEventMessage() {
 
         // given
-        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
+        final Matcher<String> matcher = CoreMatchers.containsString("foo");
+        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.ERROR);
+        loggingEvent.setMessage("foo");
 
         // then
-        assertThat(matcher.matches(loggingEvent), is(true));
+        assertThat(loggingEventMessageMatcher.matches(loggingEvent), is(true));
     }
 
     @Test
-    public void doesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
+    public void doesNotMatchWhenGivenMatcherDoesNotMatchEventMessage() {
 
         // given
-        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
+        final Matcher<String> matcher = CoreMatchers.containsString("foo");
+        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.INFO);
+        loggingEvent.setMessage("bar");
 
         // then
-        assertThat(matcher.matches(loggingEvent), is(false));
+        assertThat(loggingEventMessageMatcher.matches(loggingEvent), is(false));
     }
 
     @Test
@@ -73,17 +75,18 @@ public class LoggingEventLevelMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
+        final Matcher<String> matcher = CoreMatchers.containsString("foo");
+        final Matcher<ILoggingEvent> loggingEventMessageMatcher = hasMessage(matcher);
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.INFO);
-        matcher.matches(loggingEvent);
+        loggingEvent.setMessage("bar");
+        loggingEventMessageMatcher.matches(loggingEvent);
 
         // when
-        matcher.describeTo(matchDescription);
-        matcher.describeMismatch(loggingEvent, missMatchDescription);
+        loggingEventMessageMatcher.describeTo(matchDescription);
+        loggingEventMessageMatcher.describeMismatch(loggingEvent, missMatchDescription);
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent with level: ERROR"));
-        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}"));
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with a formattedMessage matching: a string containing \"foo\""));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='bar', loggedBy=null, throwable=null}"));
     }
 }

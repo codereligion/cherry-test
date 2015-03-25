@@ -15,6 +15,7 @@
  */
 package com.codereligion.cherry.test.hamcrest.logback;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import org.hamcrest.Matcher;
@@ -22,62 +23,45 @@ import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggerNameMatcher.wasLoggedBy;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.hasLevel;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LoggingEventLoggerNameMatcherTest {
+public class LoggingEventHasLevelTest {
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void nullLoggerNameCausesIllegalArgumentException() {
-
-        // given
-        final String loggerName = null;
+    public void nullLevelCausesIllegalArgumentException() {
 
         // expect
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("loggerName must not be null.");
+        expectedException.expectMessage("level must not be null.");
 
         // when
-        wasLoggedBy(loggerName);
+        hasLevel(null);
     }
 
     @Test
-    public void nullLoggerTypeCausesIllegalArgumentException() {
+    public void matchesWhenGivenLevelEqualsEventLevel() {
 
         // given
-        final Class<?> loggerType = null;
-
-        // expect
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("loggerType must not be null.");
-
-        // when
-        wasLoggedBy(loggerType);
-    }
-
-    @Test
-    public void matchesWhenGivenLoggerNameEqualsEventLoggerName() {
-
-        // given
-        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLoggerName("foo");
+        loggingEvent.setLevel(Level.ERROR);
 
         // then
         assertThat(matcher.matches(loggingEvent), is(true));
     }
 
     @Test
-    public void doesNotMatchWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
+    public void doesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
 
         // given
-        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLoggerName("bar");
+        loggingEvent.setLevel(Level.INFO);
 
         // then
         assertThat(matcher.matches(loggingEvent), is(false));
@@ -89,9 +73,9 @@ public class LoggingEventLoggerNameMatcherTest {
         // given
         final StringDescription matchDescription = new StringDescription();
         final StringDescription missMatchDescription = new StringDescription();
-        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
+        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
         final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLoggerName("bar");
+        loggingEvent.setLevel(Level.INFO);
         matcher.matches(loggingEvent);
 
         // when
@@ -99,7 +83,7 @@ public class LoggingEventLoggerNameMatcherTest {
         matcher.describeMismatch(loggingEvent, missMatchDescription);
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent logged by: foo"));
-        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}"));
+        assertThat(matchDescription.toString(), is("an ILoggingEvent with level: ERROR"));
+        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}"));
     }
 }
