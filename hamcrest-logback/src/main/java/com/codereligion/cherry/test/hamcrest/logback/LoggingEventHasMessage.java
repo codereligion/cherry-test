@@ -19,7 +19,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.hamcrest.CoreMatchers.containsString;
 
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to have a formatted message which matches the given {@link
@@ -42,43 +41,27 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
         return new LoggingEventHasMessage(matcher, true, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param matcher
+     * @return
+     */
     public static Matcher<ILoggingEvent> withMessage(final Matcher<String> matcher) {
         return new LoggingEventHasMessage(matcher, true, true);
     }
 
+    /**
+     * TODO document
+     *
+     * @param matcher
+     * @return
+     */
     public static Matcher<ILoggingEvent> doesNotHaveMessage(final Matcher<String> matcher) {
         return new LoggingEventHasMessage(matcher, false, false);
     }
 
-    public static Matcher<ILoggingEvent> hasMessage(final String message, final Object... args) {
-
-        if (args.length == 0) {
-            return hasMessage(containsString(message));
-        }
-
-        return hasMessage(containsString(String.format(message, args)));
-    }
-
-    public static Matcher<ILoggingEvent> withMessage(final String message, final Object... args) {
-
-        if (args.length == 0) {
-            return withMessage(containsString(message));
-        }
-
-        return withMessage(containsString(String.format(message, args)));
-    }
-
-    public static Matcher<ILoggingEvent> doesNotHaveMessage(final String message, final Object... args) {
-
-        if (args.length == 0) {
-            return doesNotHaveMessage(containsString(message));
-        }
-
-        return doesNotHaveMessage(containsString(String.format(message, args)));
-    }
-
     private final Matcher<String> matcher;
-
 
     /**
      * Creates a new instance using the given {@link org.hamcrest.Matcher}.

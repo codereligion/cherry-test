@@ -15,15 +15,12 @@
  */
 package com.codereligion.cherry.test.hamcrest.logback;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import org.hamcrest.Matcher;
-import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.loggedBy;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.wasLoggedBy;
-import static org.hamcrest.Matchers.is;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.wasNotLoggedBy;
 import static org.junit.Assert.assertThat;
 
 public class LoggingEventLoggedByTest {
@@ -32,74 +29,236 @@ public class LoggingEventLoggedByTest {
     public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void nullLoggerNameCausesIllegalArgumentException() {
-
-        // given
-        final String loggerName = null;
+    public void wasLoggedByThrowsIllegalArgumentExceptionOnNullString() {
 
         // expect
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("loggerName must not be null.");
+
+        // given
+        final String loggerName = null;
 
         // when
         wasLoggedBy(loggerName);
     }
 
     @Test
-    public void nullLoggerTypeCausesIllegalArgumentException() {
+    public void wasNotLoggedByThrowsIllegalArgumentExceptionOnNullString() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerName must not be null.");
 
         // given
-        final Class<?> loggerType = null;
+        final String loggerName = null;
+
+        // when
+        wasNotLoggedBy(loggerName);
+    }
+
+    @Test
+    public void loggedByThrowsIllegalArgumentExceptionOnNullString() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerName must not be null.");
+
+        // given
+        final String loggerName = null;
+
+        // when
+        loggedBy(loggerName);
+    }
+
+    @Test
+    public void wasLoggedByThrowsIllegalArgumentExceptionOnNullClass() {
 
         // expect
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("loggerType must not be null.");
 
-        // when
-        wasLoggedBy(loggerType);
-    }
-
-    @Test
-    public void matchesWhenGivenLoggerNameEqualsEventLoggerName() {
-
         // given
-        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLoggerName("foo");
-
-        // then
-        assertThat(matcher.matches(loggingEvent), is(true));
-    }
-
-    @Test
-    public void doesNotMatchWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
-
-        // given
-        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLoggerName("bar");
-
-        // then
-        assertThat(matcher.matches(loggingEvent), is(false));
-    }
-
-    @Test
-    public void describesError() {
-
-        // given
-        final StringDescription matchDescription = new StringDescription();
-        final StringDescription missMatchDescription = new StringDescription();
-        final Matcher<ILoggingEvent> matcher = wasLoggedBy("foo");
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLoggerName("bar");
-        matcher.matches(loggingEvent);
+        final Class<?> logger = null;
 
         // when
-        matcher.describeTo(matchDescription);
-        matcher.describeMismatch(loggingEvent, missMatchDescription);
+        wasLoggedBy(logger);
+    }
+
+    @Test
+    public void wasNotLoggedByThrowsIllegalArgumentExceptionOnNullClass() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerType must not be null.");
+
+        // given
+        final Class<?> logger = null;
+
+        // when
+        wasNotLoggedBy(logger);
+    }
+
+    @Test
+    public void loggedByThrowsIllegalArgumentExceptionOnNullClass() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("loggerType must not be null.");
+
+        // given
+        final Class<?> logger = null;
+
+        // when
+        loggedBy(logger);
+    }
+
+    @Test
+    public void wasLoggedByMatchesWhenGivenLoggerNameEqualsEventLoggerName() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName("foo");
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent logged by: foo"));
-        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}"));
+        assertThat(loggingEvent, wasLoggedBy("foo"));
+    }
+
+    @Test
+    public void wasLoggedByDoesNotMatchWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent logged by: foo\n" +
+                                        "     but: was ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName("bar");
+
+        // then
+        assertThat(loggingEvent, wasLoggedBy("foo"));
+    }
+
+    @Test
+    public void wasNotLoggedByMatchesWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName("foo");
+
+        // then
+        assertThat(loggingEvent, wasNotLoggedBy("bar"));
+    }
+
+    @Test
+    public void wasNotLoggedByDoesNotMatchWhenGivenLoggerNameEqualsEventLoggerName() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent not logged by: bar\n" +
+                                        "     but: was ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName("bar");
+
+        // then
+        assertThat(loggingEvent, wasNotLoggedBy("bar"));
+    }
+
+    @Test
+    public void loggedByMatchesWhenGivenLoggerNameEqualsEventLoggerName() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName("foo");
+
+        // then
+        assertThat(loggingEvent, loggedBy("foo"));
+    }
+
+    @Test
+    public void loggedByDoesNotMatchWhenGivenLoggerNameDoesNotEqualEventLoggerName() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent logged by: foo\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='null', loggedBy=bar, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName("bar");
+
+        // then
+        assertThat(loggingEvent, loggedBy("foo"));
+    }
+
+    @Test
+    public void wasLoggedByMatchesWhenGivenLoggerEqualsEventLoggerName() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName(this.getClass().getName());
+
+        // then
+        assertThat(loggingEvent, wasLoggedBy(this.getClass()));
+    }
+
+    @Test
+    public void wasLoggedByDoesNotMatchWhenGivenLoggerDoesNotEqualEventLoggerName() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent logged by: java.lang.String\n" +
+                                        "     but: was ILoggingEvent{level=null, formattedMessage='null', loggedBy=java.lang.Integer, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName(Integer.class.getName());
+
+        // then
+        assertThat(loggingEvent, wasLoggedBy(String.class));
+    }
+
+    @Test
+    public void wasNotLoggedByMatchesWhenGivenLoggerDoesNotEqualEventLoggerName() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName(this.getClass().getName());
+
+        // then
+        assertThat(loggingEvent, wasNotLoggedBy(String.class));
+    }
+
+    @Test
+    public void wasNotLoggedByDoesNotMatchWhenGivenLoggerEqualsEventLoggerName() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent not logged by: java.lang.Integer\n" +
+                                        "     but: was ILoggingEvent{level=null, formattedMessage='null', loggedBy=java.lang.Integer, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName(Integer.class.getName());
+
+        // then
+        assertThat(loggingEvent, wasNotLoggedBy(Integer.class));
+    }
+
+    @Test
+    public void loggedByMatchesWhenGivenLoggerEqualsEventLoggerName() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName(this.getClass().getName());
+
+        // then
+        assertThat(loggingEvent, loggedBy(this.getClass()));
+    }
+
+    @Test
+    public void loggedByDoesNotMatchWhenGivenLoggerDoesNotEqualEventLoggerName() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent logged by: java.lang.String\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='null', loggedBy=java.lang.Integer, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLoggerName(Integer.class.getName());
+
+        // then
+        assertThat(loggingEvent, loggedBy(String.class));
     }
 }

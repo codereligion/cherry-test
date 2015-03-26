@@ -40,7 +40,7 @@ public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMat
 
     @Override
     public boolean matchesSafely(final ILoggingEvent event) {
-        return shouldMatch && internalMatches(event);
+        return shouldMatch == internalMatches(event);
     }
 
     @Override

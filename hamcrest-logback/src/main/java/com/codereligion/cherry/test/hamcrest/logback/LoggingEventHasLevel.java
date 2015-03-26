@@ -41,14 +41,25 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
         return new LoggingEventHasLevel(level, true, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param level
+     * @return
+     */
     public static Matcher<ILoggingEvent> doesNotHaveLevel(final Level level) {
         return new LoggingEventHasLevel(level, false, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param level
+     * @return
+     */
     public static Matcher<ILoggingEvent> withLevel(final Level level) {
         return new LoggingEventHasLevel(level, true, true);
     }
-
 
     private final Level level;
 

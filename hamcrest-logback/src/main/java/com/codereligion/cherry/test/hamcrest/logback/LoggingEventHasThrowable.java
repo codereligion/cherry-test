@@ -34,14 +34,32 @@ import org.hamcrest.Matcher;
  */
 public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMatcher {
 
+    /**
+     * TODO document
+     *
+     * @param throwable
+     * @return
+     */
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, true, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param throwable
+     * @return
+     */
     public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, false, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param throwable
+     * @return
+     */
     public static Matcher<ILoggingEvent> withThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, true, true);
     }

@@ -48,10 +48,6 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
         return new LoggingEventLoggedBy(loggerName, true, true);
     }
 
-    public static Matcher<ILoggingEvent> notLoggedBy(final String loggerName) {
-        return new LoggingEventLoggedBy(loggerName, false, true);
-    }
-
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
      * loggerName} equal to the name of the given class.

@@ -16,15 +16,12 @@
 package com.codereligion.cherry.test.hamcrest.logback;
 
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import org.hamcrest.Matcher;
-import org.hamcrest.StringDescription;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.doesNotHaveLevel;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.hasLevel;
-import static org.hamcrest.Matchers.is;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.withLevel;
 import static org.junit.Assert.assertThat;
 
 public class LoggingEventHasLevelTest {
@@ -33,7 +30,7 @@ public class LoggingEventHasLevelTest {
     public final ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void nullLevelCausesIllegalArgumentException() {
+    public void hasLevelThrowsIllegalArgumentExceptionOnNullValue() {
 
         // expect
         expectedException.expect(IllegalArgumentException.class);
@@ -44,46 +41,79 @@ public class LoggingEventHasLevelTest {
     }
 
     @Test
-    public void matchesWhenGivenLevelEqualsEventLevel() {
+    public void doesNotHaveLevelThrowsIllegalArgumentExceptionOnNullValue() {
 
-        // given
-        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.ERROR);
-
-        // then
-        assertThat(matcher.matches(loggingEvent), is(true));
-    }
-
-    @Test
-    public void doesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
-
-        // given
-        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.INFO);
-
-        // then
-        assertThat(matcher.matches(loggingEvent), is(false));
-    }
-
-    @Test
-    public void describesError() {
-
-        // given
-        final StringDescription matchDescription = new StringDescription();
-        final StringDescription missMatchDescription = new StringDescription();
-        final Matcher<ILoggingEvent> matcher = hasLevel(Level.ERROR);
-        final LoggingEvent loggingEvent = new LoggingEvent();
-        loggingEvent.setLevel(Level.INFO);
-        matcher.matches(loggingEvent);
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("level must not be null.");
 
         // when
-        matcher.describeTo(matchDescription);
-        matcher.describeMismatch(loggingEvent, missMatchDescription);
+        doesNotHaveLevel(null);
+    }
+
+    @Test
+    public void withLevelThrowsIllegalArgumentExceptionOnNullValue() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("level must not be null.");
+
+        // when
+        withLevel(null);
+    }
+
+    @Test
+    public void hasLevelMatchesWhenGivenLevelEqualsEventLevel() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLevel(Level.ERROR);
 
         // then
-        assertThat(matchDescription.toString(), is("an ILoggingEvent with level: ERROR"));
-        assertThat(missMatchDescription.toString(), is("was ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}"));
+        assertThat(loggingEvent, hasLevel(Level.ERROR));
+    }
+
+    @Test
+    public void hasLevelDoesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
+
+        // expected
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with level: ERROR\n" +
+                                        "     but: was ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLevel(Level.INFO);
+
+        // then
+        assertThat(loggingEvent, hasLevel(Level.ERROR));
+    }
+
+    @Test
+    public void doesNotHaveLevelDoesNotMatchWhenGivenLevelIsEqualEventLevel() {
+
+        // expected
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with level other than: INFO\n" +
+                                        "     but: was ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLevel(Level.INFO);
+
+        // then
+        assertThat(loggingEvent, doesNotHaveLevel(Level.INFO));
+    }
+
+    @Test
+    public void withLevelDoesNotMatchWhenGivenLevelDoesNotEqualEventLevel() {
+
+        // expected
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with level: INFO\n" +
+                                        "     but: ILoggingEvent{level=ERROR, formattedMessage='null', loggedBy=null, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withLevel(Level.ERROR);
+
+        // then
+        assertThat(loggingEvent, withLevel(Level.INFO));
     }
 }

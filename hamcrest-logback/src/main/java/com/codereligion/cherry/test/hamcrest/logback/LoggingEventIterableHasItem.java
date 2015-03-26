@@ -21,18 +21,29 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 /**
- * TODO document TODO must be bound to ILoggingEvent TODO must provide a nice match and miss-match message
+ * TODO document
  *
  * @author Sebastian Gr&ouml;bler
  * @since 23.03.2015
  */
 public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Iterable<ILoggingEvent>> {
 
-
+    /**
+     * TODO document
+     *
+     * @param itemMatcher
+     * @return
+     */
     public static Matcher<Iterable<ILoggingEvent>> hasItem(final Matcher<ILoggingEvent> itemMatcher) {
         return new LoggingEventIterableHasItem(itemMatcher, true);
     }
 
+    /**
+     * TODO document
+     *
+     * @param itemMatcher
+     * @return
+     */
     public static Matcher<Iterable<ILoggingEvent>> hasNoItem(final Matcher<ILoggingEvent> itemMatcher) {
         return new LoggingEventIterableHasItem(itemMatcher, false);
     }
