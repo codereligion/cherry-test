@@ -76,14 +76,13 @@ public class LoggingEventIterableHasItemTest {
         assertThat(events, hasNoItem(withLevel(Level.ERROR)));
     }
 
-    // TODO improve the output of this case
     @Test
     public void hasNotItemDoesNotMatchWhenThereIsAtLeastOneItemMatching() {
 
         // expect
         expectedException.expect(AssertionError.class);
-        expectedException.expectMessage("Expected: an iterable containing an ILoggingEvent with level: ERROR\n" +
-                                        "     but: iterable contained [ILoggingEvent{level=INFO, formattedMessage='null', loggedBy=null, throwable=null}");
+        expectedException.expectMessage("Expected: an iterable not containing an ILoggingEvent with level: ERROR\n" +
+                                        "     but: iterable contained ILoggingEvent{level=ERROR, formattedMessage='null', loggedBy=null, throwable=null}");
 
         // given
         final LoggingEvent first = new LoggingEvent().withLevel(Level.INFO);

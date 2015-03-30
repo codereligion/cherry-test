@@ -59,12 +59,22 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
     @Override
     protected boolean matchesSafely(final Iterable<ILoggingEvent> collection, final Description mismatchDescription) {
 
-        mismatchDescription.appendText("iterable contained [");
+        mismatchDescription.appendText("iterable contained ");
 
+        if (shouldMatch) {
+            return positiveMatches(collection, mismatchDescription);
+        } else {
+            return negativeMatches(collection, mismatchDescription);
+        }
+    }
+
+    private boolean positiveMatches(final Iterable<ILoggingEvent> collection, final Description mismatchDescription) {
+
+        mismatchDescription.appendText("[");
         boolean isPastFirst = false;
         for (final Object item : collection) {
             if (elementMatcher.matches(item)) {
-                return shouldMatch;
+                return true;
             }
             if (isPastFirst) {
                 mismatchDescription.appendText(", ");
@@ -74,11 +84,26 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
         }
 
         mismatchDescription.appendText("]");
-        return !shouldMatch;
+        return false;
+    }
+
+    private boolean negativeMatches(final Iterable<ILoggingEvent> collection, final Description mismatchDescription) {
+        for (final Object item : collection) {
+            if (elementMatcher.matches(item)) {
+                elementMatcher.describeMismatch(item, mismatchDescription);
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public void describeTo(final Description description) {
-        description.appendText("an iterable containing ").appendDescriptionOf(elementMatcher);
+        if (shouldMatch) {
+            description.appendText("an iterable containing ");
+        } else {
+            description.appendText("an iterable not containing ");
+        }
+        description.appendDescriptionOf(elementMatcher);
     }
 }
