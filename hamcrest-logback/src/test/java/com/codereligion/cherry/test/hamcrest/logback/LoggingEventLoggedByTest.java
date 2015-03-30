@@ -23,6 +23,12 @@ import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventLoggedBy.wasNotLoggedBy;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests {@link LoggingEventLoggedBy}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 30.03.2015
+ */
 public class LoggingEventLoggedByTest {
 
     @Rule

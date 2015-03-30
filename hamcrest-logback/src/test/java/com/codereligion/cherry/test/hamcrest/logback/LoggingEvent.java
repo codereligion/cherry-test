@@ -23,6 +23,12 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 import java.util.Map;
 import org.slf4j.Marker;
 
+/**
+ * Pojo implementation of {@link ILoggingEvent}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 30.03.2015
+ */
 public class LoggingEvent implements ILoggingEvent {
 
 

@@ -28,7 +28,10 @@ import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventIterable
 import static org.junit.Assert.assertThat;
 
 /**
- * TODO document
+ * Tests {@link LoggingEventIterableHasItem}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 30.03.2015
  */
 public class LoggingEventIterableHasItemTest {
 

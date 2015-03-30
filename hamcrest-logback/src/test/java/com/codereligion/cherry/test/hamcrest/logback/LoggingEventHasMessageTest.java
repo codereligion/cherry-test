@@ -26,8 +26,10 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
 /**
- * TODO document
+ * Tests {@link LoggingEventHasMessage}.
  *
+ * @author Sebastian Gr&ouml;bler
+ * @since 30.03.2015
  */
 public class LoggingEventHasMessageTest {
 

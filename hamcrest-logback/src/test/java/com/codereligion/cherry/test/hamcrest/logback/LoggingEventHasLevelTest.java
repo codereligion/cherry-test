@@ -24,6 +24,12 @@ import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasLevel.withLevel;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests {@link LoggingEventHasLevel}.
+ *
+ * @author Sebastian Gr&ouml;bler
+ * @since 30.03.2015
+ */
 public class LoggingEventHasLevelTest {
 
     @Rule
