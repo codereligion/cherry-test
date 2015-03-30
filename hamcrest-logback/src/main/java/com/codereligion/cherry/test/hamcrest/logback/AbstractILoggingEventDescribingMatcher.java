@@ -22,8 +22,7 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
- * Abstract {@link TypeSafeMatcher} which unifies the expected and actual message by using the same message type but different values to reflect the respective
- * states.
+ * Abstract {@link TypeSafeMatcher} which handles positive/negative matching and iterable matching specific message formatting.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 18.03.2015
@@ -58,14 +57,12 @@ public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMat
 
     protected abstract void describeNegativeMatch(Description description);
 
-
     @Override
     protected void describeMismatchSafely(final ILoggingEvent item, final Description mismatchDescription) {
-        if (isIterableMatcher) {
-            mismatchDescription.appendText(toString(item));
-        } else {
-            mismatchDescription.appendText("was " + toString(item));
+        if (!isIterableMatcher) {
+            mismatchDescription.appendText("was ");
         }
+        mismatchDescription.appendText(toString(item));
     }
 
     private String toString(final ILoggingEvent item) {
@@ -89,6 +86,14 @@ public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMat
             return "null";
         }
 
-        return new StringBuilder().append(throwableProxy.getClassName()).append("{message='").append(throwableProxy.getMessage()).append("'}").toString();
+        final StringBuilder stringBuilder = new StringBuilder().append(throwableProxy.getClassName()).append("{");
+
+        if (throwableProxy.getMessage() == null) {
+            stringBuilder.append("message=null");
+        } else {
+            stringBuilder.append("message='").append(throwableProxy.getMessage()).append("'");
+        }
+
+        return stringBuilder.append("}").toString();
     }
 }

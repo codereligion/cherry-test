@@ -40,10 +40,22 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
         return new LoggingEventLoggedBy(loggerName, true, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param loggerName
+     * @return
+     */
     public static Matcher<ILoggingEvent> wasNotLoggedBy(final String loggerName) {
         return new LoggingEventLoggedBy(loggerName, false, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param loggerName
+     * @return
+     */
     public static Matcher<ILoggingEvent> loggedBy(final String loggerName) {
         return new LoggingEventLoggedBy(loggerName, true, true);
     }
@@ -60,10 +72,22 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
         return new LoggingEventLoggedBy(loggerType, true, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param loggerType
+     * @return
+     */
     public static Matcher<ILoggingEvent> wasNotLoggedBy(final Class<?> loggerType) {
         return new LoggingEventLoggedBy(loggerType, false, false);
     }
 
+    /**
+     * TODO document
+     *
+     * @param loggerType
+     * @return
+     */
     public static Matcher<ILoggingEvent> loggedBy(final Class<?> loggerType) {
         return new LoggingEventLoggedBy(loggerType, true, true);
     }

@@ -95,14 +95,23 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
 
     @Override
     protected void describeNegativeMatch(final Description description) {
-        description.appendText("an ILoggingEvent with a throwable matching: " + toString(throwable));
+        description.appendText("an ILoggingEvent with a throwable not matching: " + toString(throwable));
     }
 
     private String toString(final Throwable throwable) {
+
         if (throwable == null) {
             return "null";
         }
 
-        return throwable.getClass().getName() + "[" + throwable.getMessage() + "]";
+        final StringBuilder stringBuilder = new StringBuilder().append(throwable.getClass().getName()).append("{");
+
+        if (throwable.getMessage() == null) {
+            stringBuilder.append("message=null");
+        } else {
+            stringBuilder.append("message='").append(throwable.getMessage()).append("'");
+        }
+
+        return stringBuilder.append("}").toString();
     }
 }

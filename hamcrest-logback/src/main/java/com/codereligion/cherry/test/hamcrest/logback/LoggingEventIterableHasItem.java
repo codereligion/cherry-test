@@ -51,7 +51,7 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
     private final Matcher<ILoggingEvent> elementMatcher;
     private final boolean shouldMatch;
 
-    public LoggingEventIterableHasItem(final Matcher<ILoggingEvent> elementMatcher, final boolean shouldMatch) {
+    private LoggingEventIterableHasItem(final Matcher<ILoggingEvent> elementMatcher, final boolean shouldMatch) {
         this.elementMatcher = elementMatcher;
         this.shouldMatch = shouldMatch;
     }
