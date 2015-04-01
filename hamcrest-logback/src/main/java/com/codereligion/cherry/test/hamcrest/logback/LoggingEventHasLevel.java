@@ -38,16 +38,6 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> hasLevel(final Level level) {
-        return new LoggingEventHasLevel(level, true, false);
-    }
-
-    /**
-     * TODO document
-     *
-     * @param level
-     * @return
-     */
-    public static Matcher<ILoggingEvent> doesNotHaveLevel(final Level level) {
         return new LoggingEventHasLevel(level, false, false);
     }
 
@@ -57,20 +47,31 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
      * @param level
      * @return
      */
+    public static Matcher<ILoggingEvent> doesNotHaveLevel(final Level level) {
+        return new LoggingEventHasLevel(level, true, false);
+    }
+
+    /**
+     * TODO document
+     *
+     * @param level
+     * @return
+     */
     public static Matcher<ILoggingEvent> withLevel(final Level level) {
-        return new LoggingEventHasLevel(level, true, true);
+        return new LoggingEventHasLevel(level, false, true);
     }
 
     private final Level level;
 
     /**
+     * TODO document
      * Creates a new instance using the given {@link ch.qos.logback.classic.Level}.
      *
      * @param level the level to match the event's log level against.
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventHasLevel(final Level level, final boolean shouldMatch, final boolean isIterableMatcher) {
-        super(shouldMatch, isIterableMatcher);
+    private LoggingEventHasLevel(final Level level, final boolean negated, final boolean usedOnIterable) {
+        super(negated, usedOnIterable);
         checkArgument(level != null, "level must not be null.");
         this.level = level;
     }
@@ -81,12 +82,12 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
     }
 
     @Override
-    protected void describePositiveMatch(final Description description) {
+    protected void describeExpectation(final Description description) {
         description.appendText("an ILoggingEvent with level: " + level);
     }
 
     @Override
-    protected void describeNegativeMatch(final Description description) {
+    protected void describeNegatedExpectation(final Description description) {
         description.appendText("an ILoggingEvent with level other than: " + level);
     }
 }

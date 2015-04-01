@@ -38,7 +38,7 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> hasMessage(final Matcher<String> matcher) {
-        return new LoggingEventHasMessage(matcher, true, false);
+        return new LoggingEventHasMessage(matcher, false, false);
     }
 
     /**
@@ -48,7 +48,7 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      * @return
      */
     public static Matcher<ILoggingEvent> withMessage(final Matcher<String> matcher) {
-        return new LoggingEventHasMessage(matcher, true, true);
+        return new LoggingEventHasMessage(matcher, false, true);
     }
 
     /**
@@ -58,7 +58,7 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      * @return
      */
     public static Matcher<ILoggingEvent> doesNotHaveMessage(final Matcher<String> matcher) {
-        return new LoggingEventHasMessage(matcher, false, false);
+        return new LoggingEventHasMessage(matcher, true, false);
     }
 
     private final Matcher<String> matcher;
@@ -67,12 +67,12 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      * Creates a new instance using the given {@link org.hamcrest.Matcher}.
      *
      * @param matcher     the matcher to use
-     * @param shouldMatch if the matcher is expected to match or not
+     * @param isNegated if the matcher is negated
      * @param isIterableMatcher if the matcher is used as part of an iterable matching
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventHasMessage(final Matcher<String> matcher, final boolean shouldMatch, final boolean isIterableMatcher) {
-        super(shouldMatch, isIterableMatcher);
+    private LoggingEventHasMessage(final Matcher<String> matcher, final boolean isNegated, final boolean isIterableMatcher) {
+        super(isNegated, isIterableMatcher);
         checkArgument(matcher != null, "matcher must not be null.");
         this.matcher = matcher;
     }
@@ -83,12 +83,12 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
     }
 
     @Override
-    protected void describePositiveMatch(final Description description) {
+    protected void describeExpectation(final Description description) {
         matcher.describeTo(description.appendText("an ILoggingEvent with a formattedMessage matching: "));
     }
 
     @Override
-    protected void describeNegativeMatch(final Description description) {
+    protected void describeNegatedExpectation(final Description description) {
         matcher.describeTo(description.appendText("an ILoggingEvent with a formattedMessage not matching: "));
     }
 }

@@ -37,16 +37,6 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> wasLoggedBy(final String loggerName) {
-        return new LoggingEventLoggedBy(loggerName, true, false);
-    }
-
-    /**
-     * TODO document
-     *
-     * @param loggerName
-     * @return
-     */
-    public static Matcher<ILoggingEvent> wasNotLoggedBy(final String loggerName) {
         return new LoggingEventLoggedBy(loggerName, false, false);
     }
 
@@ -56,8 +46,18 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * @param loggerName
      * @return
      */
+    public static Matcher<ILoggingEvent> wasNotLoggedBy(final String loggerName) {
+        return new LoggingEventLoggedBy(loggerName, true, false);
+    }
+
+    /**
+     * TODO document
+     *
+     * @param loggerName
+     * @return
+     */
     public static Matcher<ILoggingEvent> loggedBy(final String loggerName) {
-        return new LoggingEventLoggedBy(loggerName, true, true);
+        return new LoggingEventLoggedBy(loggerName, false, true);
     }
 
     /**
@@ -69,16 +69,6 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> wasLoggedBy(final Class<?> loggerType) {
-        return new LoggingEventLoggedBy(loggerType, true, false);
-    }
-
-    /**
-     * TODO document
-     *
-     * @param loggerType
-     * @return
-     */
-    public static Matcher<ILoggingEvent> wasNotLoggedBy(final Class<?> loggerType) {
         return new LoggingEventLoggedBy(loggerType, false, false);
     }
 
@@ -88,34 +78,47 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * @param loggerType
      * @return
      */
+    public static Matcher<ILoggingEvent> wasNotLoggedBy(final Class<?> loggerType) {
+        return new LoggingEventLoggedBy(loggerType, true, false);
+    }
+
+    /**
+     * TODO document
+     *
+     * @param loggerType
+     * @return
+     */
     public static Matcher<ILoggingEvent> loggedBy(final Class<?> loggerType) {
-        return new LoggingEventLoggedBy(loggerType, true, true);
+        return new LoggingEventLoggedBy(loggerType, false, true);
     }
 
     private final String loggerName;
 
     /**
+     * TODO document
      * Creates a new instance using the given {@code loggerName}.
      *
      * @param loggerName the name of the loggerName to match the event's loggerName with
-     * @param shouldMatch
-     * @param isIterableMatcher
+     * @param negated
+     * @param usedOnIterable
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLoggedBy(final String loggerName, final boolean shouldMatch, final boolean isIterableMatcher) {
-        super(shouldMatch, isIterableMatcher);
+    private LoggingEventLoggedBy(final String loggerName, final boolean negated, final boolean usedOnIterable) {
+        super(negated, usedOnIterable);
         checkArgument(loggerName != null, "loggerName must not be null.");
         this.loggerName = loggerName;
     }
 
     /**
+     * TODO document
+     *
      * Creates a new instance using the name of the given {@code loggerType}.
      *
      * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLoggedBy(final Class<?> loggerType, final boolean shouldMatch, final boolean isIterableMatcher) {
-        super(shouldMatch, isIterableMatcher);
+    private LoggingEventLoggedBy(final Class<?> loggerType, final boolean netaged, final boolean usedOnIterable) {
+        super(netaged, usedOnIterable);
         checkArgument(loggerType != null, "loggerType must not be null.");
         this.loggerName = loggerType.getName();
     }
@@ -127,12 +130,12 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
     }
 
     @Override
-    protected void describePositiveMatch(final Description description) {
+    protected void describeExpectation(final Description description) {
         description.appendText("an ILoggingEvent logged by: " + loggerName);
     }
 
     @Override
-    protected void describeNegativeMatch(final Description description) {
+    protected void describeNegatedExpectation(final Description description) {
         description.appendText("an ILoggingEvent not logged by: " + loggerName);
     }
 }

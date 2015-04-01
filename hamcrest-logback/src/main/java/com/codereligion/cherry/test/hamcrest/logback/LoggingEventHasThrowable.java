@@ -41,16 +41,6 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
      * @return
      */
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
-        return new LoggingEventHasThrowable(throwable, true, false);
-    }
-
-    /**
-     * TODO document
-     *
-     * @param throwable
-     * @return
-     */
-    public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, false, false);
     }
 
@@ -60,19 +50,30 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
      * @param throwable
      * @return
      */
+    public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
+        return new LoggingEventHasThrowable(throwable, true, false);
+    }
+
+    /**
+     * TODO document
+     *
+     * @param throwable
+     * @return
+     */
     public static Matcher<ILoggingEvent> withThrowable(final Throwable throwable) {
-        return new LoggingEventHasThrowable(throwable, true, true);
+        return new LoggingEventHasThrowable(throwable, false, true);
     }
 
     private final Throwable throwable;
 
     /**
+     * TODO document
      * Creates a new instance using the given {@link java.lang.Throwable}.
      *
      * @param throwable the throwable to match the event's {@code throwableProxy} with
      */
-    private LoggingEventHasThrowable(@Nullable final Throwable throwable, final boolean shouldMatch, final boolean isIterableMatcher) {
-        super(shouldMatch, isIterableMatcher);
+    private LoggingEventHasThrowable(@Nullable final Throwable throwable, final boolean negated, final boolean usedOnIterable) {
+        super(negated, usedOnIterable);
         this.throwable = throwable;
     }
 
@@ -89,12 +90,12 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
     }
 
     @Override
-    protected void describePositiveMatch(final Description description) {
+    protected void describeExpectation(final Description description) {
         description.appendText("an ILoggingEvent with a throwable matching: " + toString(throwable));
     }
 
     @Override
-    protected void describeNegativeMatch(final Description description) {
+    protected void describeNegatedExpectation(final Description description) {
         description.appendText("an ILoggingEvent with a throwable not matching: " + toString(throwable));
     }
 

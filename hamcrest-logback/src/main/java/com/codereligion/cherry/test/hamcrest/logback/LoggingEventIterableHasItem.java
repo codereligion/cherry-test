@@ -35,7 +35,7 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
      * @return
      */
     public static Matcher<Iterable<ILoggingEvent>> hasItem(final Matcher<ILoggingEvent> itemMatcher) {
-        return new LoggingEventIterableHasItem(itemMatcher, true);
+        return new LoggingEventIterableHasItem(itemMatcher, false);
     }
 
     /**
@@ -45,15 +45,15 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
      * @return
      */
     public static Matcher<Iterable<ILoggingEvent>> hasNoItem(final Matcher<ILoggingEvent> itemMatcher) {
-        return new LoggingEventIterableHasItem(itemMatcher, false);
+        return new LoggingEventIterableHasItem(itemMatcher, true);
     }
 
     private final Matcher<ILoggingEvent> elementMatcher;
-    private final boolean shouldMatch;
+    private final boolean negated;
 
-    private LoggingEventIterableHasItem(final Matcher<ILoggingEvent> elementMatcher, final boolean shouldMatch) {
+    private LoggingEventIterableHasItem(final Matcher<ILoggingEvent> elementMatcher, final boolean negated) {
         this.elementMatcher = elementMatcher;
-        this.shouldMatch = shouldMatch;
+        this.negated = negated;
     }
 
     @Override
@@ -61,10 +61,10 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
 
         mismatchDescription.appendText("iterable contained ");
 
-        if (shouldMatch) {
-            return positiveMatches(collection, mismatchDescription);
-        } else {
+        if (negated) {
             return negativeMatches(collection, mismatchDescription);
+        } else {
+            return positiveMatches(collection, mismatchDescription);
         }
     }
 
@@ -99,10 +99,10 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
 
     @Override
     public void describeTo(final Description description) {
-        if (shouldMatch) {
-            description.appendText("an iterable containing ");
-        } else {
+        if (negated) {
             description.appendText("an iterable not containing ");
+        } else {
+            description.appendText("an iterable containing ");
         }
         description.appendDescriptionOf(elementMatcher);
     }

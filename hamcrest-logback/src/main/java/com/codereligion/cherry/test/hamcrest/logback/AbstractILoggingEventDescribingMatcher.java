@@ -22,40 +22,63 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
- * Abstract {@link TypeSafeMatcher} which handles positive/negative matching and iterable matching specific message formatting.
+ * Abstract {@link TypeSafeMatcher} which ensures better descriptions of expectations for regular matchers, negatable matchers and matchers used in conjunction
+ * with iterable matchers.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 18.03.2015
  */
 public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
-    private final boolean shouldMatch;
+    private final boolean isNegated;
     private final boolean isIterableMatcher;
 
-    protected AbstractILoggingEventDescribingMatcher(final boolean shouldMatch, final boolean isIterableMatcher) {
-        this.shouldMatch = shouldMatch;
+    /**
+     * Creates a new instance using the given parameters to define the behaviour of the description generation.
+     *
+     * @param isNegated if the matcher is negated
+     * @param isIterableMatcher if the matcher is used in conjunction with an iterable matcher
+     */
+    public AbstractILoggingEventDescribingMatcher(final boolean isNegated, final boolean isIterableMatcher) {
+        this.isNegated = isNegated;
         this.isIterableMatcher = isIterableMatcher;
     }
 
     @Override
     public boolean matchesSafely(final ILoggingEvent event) {
-        return shouldMatch == internalMatches(event);
+        return isNegated != internalMatches(event);
     }
 
     @Override
     public void describeTo(final Description description) {
-        if (shouldMatch) {
-            describePositiveMatch(description);
+        if (isNegated) {
+            describeNegatedExpectation(description);
         } else {
-            describeNegativeMatch(description);
+            describeExpectation(description);
         }
     }
 
+    /**
+     * This method must return true when the given {@code event} matches. Proper negation in cases of a negation is handled by the caller of this method.
+     *
+     * @param event the {@link ILoggingEvent} to be checked
+     * @return {@code true} if the event matches
+     */
     protected abstract boolean internalMatches(ILoggingEvent event);
 
-    protected abstract void describePositiveMatch(Description description);
+    /**
+     * Describes the expected data.
+     *
+     * @param description the {@link Description} to amend the text
+     */
+    protected abstract void describeExpectation(Description description);
 
-    protected abstract void describeNegativeMatch(Description description);
+    /**
+     * Describes the expected data when the matcher has been negated.
+     *
+     * @param description the {@link Description} to amend the text
+     */
+    protected abstract void describeNegatedExpectation(Description description);
 
     @Override
     protected void describeMismatchSafely(final ILoggingEvent item, final Description mismatchDescription) {
