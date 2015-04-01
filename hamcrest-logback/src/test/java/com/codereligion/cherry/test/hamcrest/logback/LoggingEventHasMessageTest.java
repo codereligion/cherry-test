@@ -102,6 +102,30 @@ public class LoggingEventHasMessageTest {
         // then
         assertThat(loggingEvent, hasMessage(containsString("foo")));
     }
+    @Test
+    public void withMessageMatchesWhenGivenMatcherMatchesEventMessage() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withMessage("foo");
+
+        // then
+        assertThat(loggingEvent, withMessage(containsString("foo")));
+    }
+
+    @Test
+    public void withMessageDoesNotMatchWhenGivenMatcherDoesNotMatchEventMessage() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with a formattedMessage matching: a string containing \"foo\"\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='bar', loggedBy=null, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withMessage("bar");
+
+        // then
+        assertThat(loggingEvent, withMessage(containsString("foo")));
+    }
 
     @Test
     public void doesNotHaveMessageMatchesWhenGivenMatcherDoesNotMatchEventMessage() {

@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.doesNotHaveThrowable;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.hasThrowable;
+import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrowable.withThrowable;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -132,6 +133,106 @@ public class LoggingEventHasThrowableTest {
 
         // then
         assertThat(loggingEvent, hasThrowable(new NullPointerException("opsi!")));
+    }
+
+    @Test
+    public void withThrowableMatchesWhenBothThrowablesAreNull() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent();
+
+        // then
+        assertThat(loggingEvent, withThrowable(null));
+    }
+
+    @Test
+    public void withThrowableDoesNotMatchWhenEventThrowableIsNull() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with a throwable matching: java.lang.RuntimeException{message='opsi!'}\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=null}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent();
+
+        // then
+        assertThat(loggingEvent, withThrowable(new RuntimeException("opsi!")));
+    }
+
+    @Test
+    public void withThrowableDoesNotMatchWhenGivenThrowableIsNull() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with a throwable matching: null\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=java.lang.RuntimeException{message='opsi!'}}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withThrowable(new RuntimeException("opsi!"));
+
+        // then
+        assertThat(loggingEvent, withThrowable(null));
+    }
+
+    @Test
+    public void withThrowableMatchesWhenThrowableClassesAreEqual() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withThrowable(new RuntimeException());
+
+        // then
+        assertThat(loggingEvent, withThrowable(new RuntimeException()));
+    }
+
+    @Test
+    public void withThrowableDoesNotMatchWhenThrowableClassesAreNotEqual() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with a throwable matching: java.lang.NullPointerException{message='opsi!'}\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=java.lang.IllegalArgumentException{message='opsi!'}}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withThrowable(new IllegalArgumentException("opsi!"));
+
+        // then
+        assertThat(loggingEvent, withThrowable(new NullPointerException("opsi!")));
+    }
+
+    @Test
+    public void withThrowableMatchesWhenThrowableMessagesAreEqual() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withThrowable(new NullPointerException("opsi!"));
+
+        // then
+        assertThat(loggingEvent, withThrowable(new NullPointerException("opsi!")));
+    }
+
+    @Test
+    public void withThrowableMatchesWhenThrowableMessagesAreNull() {
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withThrowable(new NullPointerException(null));
+
+        // then
+        assertThat(loggingEvent, withThrowable(new NullPointerException(null)));
+    }
+
+    @Test
+    public void withThrowableDoesNotMatchWhenThrowableMessageAreNotEqual() {
+
+        // expect
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage("Expected: an ILoggingEvent with a throwable matching: java.lang.NullPointerException{message='opsi!'}\n" +
+                                        "     but: ILoggingEvent{level=null, formattedMessage='null', loggedBy=null, throwable=java.lang.NullPointerException{message='nope!'}}");
+
+        // given
+        final LoggingEvent loggingEvent = new LoggingEvent().withThrowable(new NullPointerException("nope!"));
+
+        // then
+        assertThat(loggingEvent, withThrowable(new NullPointerException("opsi!")));
     }
 
     @Test
