@@ -31,9 +31,15 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
-     * to the given {@link ch.qos.logback.classic.Level}.
+     * to the given {@link ch.qos.logback.classic.Level}. This matcher is doing the same assertion as {@link LoggingEventHasLevel#withLevel(Level)} (Level)},
+     * with the difference that this matcher's output is optimized for usage on single events.
+     * <p/>
+     * Example usage: {@code assertThat(event, hasLevel(Level.ERROR));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with level: ERROR but: was ILoggingEvent{level=INFO, formattedMessage='some Message',
+     * loggedBy='aLogger', throwable=null}}
      *
-     * @param level the level to match the event's log level against.
+     * @param level the level to match the event's log level against
      * @return a new matcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
@@ -42,20 +48,37 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event does not have a log
+     * level equal to the given {@link ch.qos.logback.classic.Level}. This matcher is the negation of {@link LoggingEventHasLevel#hasLevel(Level)}
+     * (Level)}. It is recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)}
+     * because of the improved error output of this matcher.
+     * <p/>
+     * Example usage: {@code assertThat(event, doesNotHaveLevel(Level.ERROR));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with level other than: ERROR but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * loggedBy='aLogger', throwable=null}}
      *
-     * @param level
-     * @return
+     * @param level the level to match the event's log level against
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> doesNotHaveLevel(final Level level) {
         return new LoggingEventHasLevel(level, true, false);
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
+     * to the given {@link ch.qos.logback.classic.Level}. This matcher is doing the same assertion as {@link LoggingEventHasLevel#hasLevel(Level)}, with the
+     * difference that this matcher's output is optimized for usage on iterables of events.
+     * <p/>
+     * Example usage: {@code assertThat(events, hasItem(withLevel(Level.ERROR)));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with level: ERROR but: iterable contained ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy='aLogger', throwable=null}}
      *
-     * @param level
-     * @return
+     * @param level the level to match the event's log level against
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> withLevel(final Level level) {
         return new LoggingEventHasLevel(level, false, true);
@@ -64,10 +87,12 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
     private final Level level;
 
     /**
-     * TODO document
-     * Creates a new instance using the given {@link ch.qos.logback.classic.Level}.
+     * Creates a new instance using the given {@link ch.qos.logback.classic.Level} for matching and the values supplied for {@code negated} and {@code
+     * usedOnIterable} to configure the behaviour of the description generation.
      *
-     * @param level the level to match the event's log level against.
+     * @param level          the level to match the event's log level against
+     * @param negated        if the matcher is negated
+     * @param usedOnIterable if the matcher is used in conjunction with an iterable matcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     private LoggingEventHasLevel(final Level level, final boolean negated, final boolean usedOnIterable) {

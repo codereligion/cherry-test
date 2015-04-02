@@ -30,28 +30,28 @@ import org.hamcrest.TypeSafeMatcher;
  */
 public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
-    private final boolean isNegated;
-    private final boolean isIterableMatcher;
+    private final boolean negated;
+    private final boolean usedOnIterable;
 
     /**
      * Creates a new instance using the given parameters to define the behaviour of the description generation.
      *
-     * @param isNegated if the matcher is negated
-     * @param isIterableMatcher if the matcher is used in conjunction with an iterable matcher
+     * @param negated if the matcher is negated
+     * @param usedOnIterable if the matcher is used in conjunction with an iterable matcher
      */
-    public AbstractILoggingEventDescribingMatcher(final boolean isNegated, final boolean isIterableMatcher) {
-        this.isNegated = isNegated;
-        this.isIterableMatcher = isIterableMatcher;
+    public AbstractILoggingEventDescribingMatcher(final boolean negated, final boolean usedOnIterable) {
+        this.negated = negated;
+        this.usedOnIterable = usedOnIterable;
     }
 
     @Override
     public boolean matchesSafely(final ILoggingEvent event) {
-        return isNegated != internalMatches(event);
+        return negated != internalMatches(event);
     }
 
     @Override
     public void describeTo(final Description description) {
-        if (isNegated) {
+        if (negated) {
             describeNegatedExpectation(description);
         } else {
             describeExpectation(description);
@@ -82,7 +82,7 @@ public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMat
 
     @Override
     protected void describeMismatchSafely(final ILoggingEvent item, final Description mismatchDescription) {
-        if (!isIterableMatcher) {
+        if (!usedOnIterable) {
             mismatchDescription.appendText("was ");
         }
         mismatchDescription.appendText(toString(item));
