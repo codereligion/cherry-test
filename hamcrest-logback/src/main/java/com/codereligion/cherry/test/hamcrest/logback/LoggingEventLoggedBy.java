@@ -29,8 +29,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher {
 
     /**
-     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
-     * loggerName} equal to the given one.
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event was logged by a
+     * logger of which the name is equal to the given one. This matcher is doing the same assertion as {@link LoggingEventLoggedBy#loggedBy(String)}, with the
+     * difference that this matcher's output is optimized for usage on single events.
+     * <p/>
+     * Example usage: {@code assertThat(event, wasLoggedBy("SomeLogger"));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent logged by: someLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * loggedBy=SomeOtherLogger, throwable=null}}
      *
      * @param loggerName the name of the loggerName to match the event's logger with
      * @return a new matcher
@@ -41,28 +47,51 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event was logged by a
+     * logger of which the name is not equal to the given one. This matcher is the negation of {@link LoggingEventLoggedBy#wasLoggedBy(String)}. It is
+     * recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)} because of the
+     * improved error output.
+     * <p/>
+     * Example usage: {@code assertThat(event, wasNotLoggedBy("SomeLogger"));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent logged by: SomeLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * loggedBy=SomeOtherLogger, throwable=null}}
      *
-     * @param loggerName
-     * @return
+     * @param loggerName the name of the loggerName to match the event's logger with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> wasNotLoggedBy(final String loggerName) {
         return new LoggingEventLoggedBy(loggerName, true, false);
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event was logged by a
+     * logger of which the name is equal to the given one. This matcher is doing the same assertion as {@link LoggingEventLoggedBy#wasLoggedBy(String)}, with
+     * the difference that this matcher's output is optimized for usage on iterables of events.
+     * <p/>
+     * Example usage: {@code assertThat(events, hasItem(loggedBy("SomeLogger")));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent logged by: SomeLogger but: iterable contained [ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy=SomeOtherLogger, throwable=null}]}
      *
-     * @param loggerName
-     * @return
+     * @param loggerName the name of the loggerName to match the event's logger with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> loggedBy(final String loggerName) {
         return new LoggingEventLoggedBy(loggerName, false, true);
     }
 
     /**
-     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
-     * loggerName} equal to the name of the given class.
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event was logged by a
+     * logger of which the name is equal to the name of the given class. This matcher is doing the same assertion as {@link
+     * LoggingEventLoggedBy#loggedBy(Class)}, with the difference that this matcher's output is optimized for usage on single events.
+     * <p/>
+     * Example usage: {@code assertThat(event, wasLoggedBy(SomeType.class));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent logged by: SomeType but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * loggedBy=SomeOtherLogger, throwable=null}}
      *
      * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
      * @return a new matcher
@@ -73,20 +102,37 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event was logged by a
+     * logger of which the name is not equal to the name of the given class. This matcher is the negation of {@link LoggingEventLoggedBy#wasLoggedBy(Class)}. It
+     * is recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)} because of
+     * the improved error output.
+     * <p/>
+     * Example usage: {@code assertThat(event, wasNotLoggedBy(SomeType.class));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent not logged by: SomeLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * loggedBy=SomeType, throwable=null}}
      *
-     * @param loggerType
-     * @return
+     * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> wasNotLoggedBy(final Class<?> loggerType) {
         return new LoggingEventLoggedBy(loggerType, true, false);
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event was logged by a
+     * logger of which the name is equal to the name of the given class. This matcher is doing the same assertion as {@link
+     * LoggingEventLoggedBy#wasLoggedBy(Class)}, with the difference that this matcher's output is optimized for usage on iterables of events.
+     * <p/>
+     * Example usage: {@code assertThat(events, hasItem(loggedBy(SomeType.class)));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent logged by: SomeType but: iterable contained [ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy=SomeOtherLogger, throwable=null}]}
      *
-     * @param loggerType
-     * @return
+     * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> loggedBy(final Class<?> loggerType) {
         return new LoggingEventLoggedBy(loggerType, false, true);
@@ -95,12 +141,11 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
     private final String loggerName;
 
     /**
-     * TODO document
      * Creates a new instance using the given {@code loggerName}.
      *
-     * @param loggerName the name of the loggerName to match the event's loggerName with
-     * @param negated
-     * @param usedOnIterable
+     * @param loggerName     the name of the loggerName to match the event's loggerName with
+     * @param negated        if the matcher is negated
+     * @param usedOnIterable if the matcher is used as part of an iterable matching
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     private LoggingEventLoggedBy(final String loggerName, final boolean negated, final boolean usedOnIterable) {
@@ -110,15 +155,15 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
     }
 
     /**
-     * TODO document
-     *
      * Creates a new instance using the name of the given {@code loggerType}.
      *
-     * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with
+     * @param loggerType     the {@link java.lang.Class} of which the name will be used to match the event's logger with
+     * @param negated        if the matcher is negated
+     * @param usedOnIterable if the matcher is used as part of an iterable matching
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventLoggedBy(final Class<?> loggerType, final boolean netaged, final boolean usedOnIterable) {
-        super(netaged, usedOnIterable);
+    private LoggingEventLoggedBy(final Class<?> loggerType, final boolean negated, final boolean usedOnIterable) {
+        super(negated, usedOnIterable);
         checkArgument(loggerType != null, "loggerType must not be null.");
         this.loggerName = loggerType.getName();
     }

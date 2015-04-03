@@ -25,7 +25,6 @@ import org.hamcrest.Matcher;
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to contain the specified {@link Throwable}.
  * <p/>
- * <p/>
  * This matcher returns true when: <li> <ul>the given throwable is {@code null} and the logging event does not have an associated throwable</ul> <ul>the given
  * throwable matches in class and message the throwable which is associated with the logging event</ul> </li>
  *
@@ -35,30 +34,52 @@ import org.hamcrest.Matcher;
 public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMatcher {
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@link
+     * Throwable} associated to it which matches the given one. This matcher is doing the same assertion as {@link
+     * LoggingEventHasThrowable#withThrowable(Throwable)}, with the difference that this matcher's output is optimized for usage on single events.
+     * <p/>
+     * Example usage: {@code assertThat(event, hasThrowable(new NullPointerException("opsi!)));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with a throwable matching: java.lang.NullPointerException{message='opsi!'} but: was
+     * ILoggingEvent{level=ERROR, formattedMessage='some Message', loggedBy=SomeLogger, throwable=java.lang.NullPointerException{message='nope!'}}}
      *
-     * @param throwable
-     * @return
+     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @return a new matcher
      */
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, false, false);
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event does not have a
+     * {@link Throwable} associated to it which matches the given one. This matcher is the negation of {@link LoggingEventHasThrowable#hasThrowable(Throwable)}.
+     * It is recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)} because of
+     * the improved error output.
+     * <p/>
+     * Example usage: {@code assertThat(event, doesNotHaveThrowable(new NullPointerException("ohoh")));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with a throwable not matching: java.lang.NullPointerException{message='ohoh'} but: was
+     * ILoggingEvent{level=ERROR, formattedMessage='some message', loggedBy=SomeLogger, throwable=java.lang.NullPointerException{message='ohoh'}}}
      *
-     * @param throwable
-     * @return
+     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @return a new matcher
      */
     public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, true, false);
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@link
+     * Throwable} associated to it which matches the given one. This matcher is doing the same assertion as {@link
+     * LoggingEventHasThrowable#hasThrowable(Throwable)}, with the difference that this matcher's output is optimized for usage on iterables of events.
+     * <p/>
+     * Example usage: {@code assertThat(events, hasItem(withThrowable(new NullPointerException("ohoh"))));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with a throwable matching: java.lang.NullPointerException{message='ohoh'} but:
+     * iterable contained [ILoggingEvent{level=INFO, formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
      *
-     * @param throwable
-     * @return
+     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @return a new matcher
      */
     public static Matcher<ILoggingEvent> withThrowable(final Throwable throwable) {
         return new LoggingEventHasThrowable(throwable, false, true);
@@ -67,10 +88,11 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
     private final Throwable throwable;
 
     /**
-     * TODO document
      * Creates a new instance using the given {@link java.lang.Throwable}.
      *
-     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @param throwable      the throwable to match the event's {@code throwableProxy} with
+     * @param negated        if the matcher is negated
+     * @param usedOnIterable if the matcher is used as part of an iterable matching
      */
     private LoggingEventHasThrowable(@Nullable final Throwable throwable, final boolean negated, final boolean usedOnIterable) {
         super(negated, usedOnIterable);

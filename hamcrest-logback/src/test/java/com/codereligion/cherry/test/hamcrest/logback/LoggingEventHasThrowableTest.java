@@ -24,7 +24,6 @@ import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasThrow
 import static org.junit.Assert.assertThat;
 
 /**
- * TODO write test for the other two factory methods
  * Tests {@link LoggingEventHasThrowable}.
  *
  * @author Sebastian Gr&ouml;bler

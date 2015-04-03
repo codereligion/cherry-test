@@ -102,6 +102,7 @@ public class LoggingEventHasMessageTest {
         // then
         assertThat(loggingEvent, hasMessage(containsString("foo")));
     }
+
     @Test
     public void withMessageMatchesWhenGivenMatcherMatchesEventMessage() {
 

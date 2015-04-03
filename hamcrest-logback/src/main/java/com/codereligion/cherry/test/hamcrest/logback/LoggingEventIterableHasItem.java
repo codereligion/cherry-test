@@ -21,7 +21,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 /**
- * TODO document
+ * A matcher which expects at least one item of an iterable of {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} to match the given {@link
+ * org.hamcrest.Matcher}.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 23.03.2015
@@ -29,20 +30,36 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Iterable<ILoggingEvent>> {
 
     /**
-     * TODO document
+     * Creates a new matcher for iterables of {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when at least one event matches
+     * the given {@link org.hamcrest.Matcher}. It is recommended to use this specific matcher instead of just combining the other matcher with {@link
+     * org.hamcrest.CoreMatchers#hasItem(Object)} because of the improved error output and generics handling.
+     * <p/>
+     * Example usage: {@code assertThat(event, hasItem(withLevel(Level.ERROR)));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with level: ERROR but: was [ILoggingEvent{level=INFO, formattedMessage='some
+     * Message', loggedBy=SomeLogger, throwable=null}]}
      *
-     * @param itemMatcher
-     * @return
+     * @param itemMatcher the logging event {@link Matcher} to check the items with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<Iterable<ILoggingEvent>> hasItem(final Matcher<ILoggingEvent> itemMatcher) {
         return new LoggingEventIterableHasItem(itemMatcher, false);
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for iterables of {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when at no event matches the
+     * given {@link org.hamcrest.Matcher}. This matcher is the negation of {@link LoggingEventIterableHasItem#hasItem(Matcher)}. It is recommended to use this
+     * specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)} because of the improved error output.
+     * <p/>
+     * Example usage: {@code assertThat(event, hasNoItem(withLevel(Level.ERROR)));}
+     * <p/>
+     * Example output: {@code Expected: an iterable not containing an ILoggingEvent with level: ERROR but: was [ILoggingEvent{level=ERROR,
+     * formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
      *
-     * @param itemMatcher
-     * @return
+     * @param itemMatcher the logging event {@link Matcher} to check the items with
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<Iterable<ILoggingEvent>> hasNoItem(final Matcher<ILoggingEvent> itemMatcher) {
         return new LoggingEventIterableHasItem(itemMatcher, true);

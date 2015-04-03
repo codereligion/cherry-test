@@ -30,10 +30,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatcher {
 
     /**
-     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code message}
-     * which is matched by the given {@link org.hamcrest.Matcher}.
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
+     * formattedMessage} which is matched by the given {@link org.hamcrest.Matcher}. This matcher is doing the same assertion as {@link
+     * LoggingEventHasMessage#withMessage(Matcher)}, with the difference that this matcher's output is optimized for usage on single events.
+     * <p/>
+     * Example usage: {@code assertThat(event, hasMessage(containsString("ohoh")));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with a formattedMessage matching: a string containing "ohoh" but: was ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}}
      *
-     * @param matcher the message matcher
+     * @param matcher the string {@link Matcher} to check the {@code formattedMessage} against
      * @return a new matcher
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
@@ -42,23 +48,40 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
     }
 
     /**
-     * TODO document
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event does not have a
+     * {@code formattedMessage} which is matched by the given {@link org.hamcrest.Matcher}. This matcher is the negation of {@link
+     * LoggingEventHasMessage#hasMessage(Matcher)}. It is recommended to use this specific matcher instead of just combining the other matcher with {@link
+     * org.hamcrest.CoreMatchers#not(Matcher)} because of the improved error output.
+     * <p/>
+     * Example usage: {@code assertThat(event, doesNotHaveMessage(containsString("ohoh")));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with a formattedMessage not matching: a string containing "ohoh" but: was ILoggingEvent{level=ERROR,
+     * formattedMessage='ohoh', loggedBy=SomeLogger, throwable=null}}
      *
-     * @param matcher
-     * @return
-     */
-    public static Matcher<ILoggingEvent> withMessage(final Matcher<String> matcher) {
-        return new LoggingEventHasMessage(matcher, false, true);
-    }
-
-    /**
-     * TODO document
-     *
-     * @param matcher
-     * @return
+     * @param matcher the string {@link Matcher} to check the {@code formattedMessage} against
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
     public static Matcher<ILoggingEvent> doesNotHaveMessage(final Matcher<String> matcher) {
         return new LoggingEventHasMessage(matcher, true, false);
+    }
+
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
+     * formattedMessage} which is matched by the given {@link org.hamcrest.Matcher}. This matcher is doing the same assertion as {@link
+     * LoggingEventHasMessage#hasMessage(Matcher)}, with the difference that this matcher's output is optimized for usage on iterables of events.
+     * <p/>
+     * Example usage: {@code assertThat(events, hasItem(withMessage(containsString("ohoh"))));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with level: ERROR but: iterable contained [ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
+     *
+     * @param matcher the string {@link Matcher} to check the {@code formattedMessage} against
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     */
+    public static Matcher<ILoggingEvent> withMessage(final Matcher<String> matcher) {
+        return new LoggingEventHasMessage(matcher, false, true);
     }
 
     private final Matcher<String> matcher;
@@ -66,13 +89,13 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
     /**
      * Creates a new instance using the given {@link org.hamcrest.Matcher}.
      *
-     * @param matcher     the matcher to use
-     * @param isNegated if the matcher is negated
-     * @param isIterableMatcher if the matcher is used as part of an iterable matching
+     * @param matcher        the matcher to use
+     * @param negated        if the matcher is negated
+     * @param usedOnIterable if the matcher is used as part of an iterable matching
      * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
      */
-    private LoggingEventHasMessage(final Matcher<String> matcher, final boolean isNegated, final boolean isIterableMatcher) {
-        super(isNegated, isIterableMatcher);
+    private LoggingEventHasMessage(final Matcher<String> matcher, final boolean negated, final boolean usedOnIterable) {
+        super(negated, usedOnIterable);
         checkArgument(matcher != null, "matcher must not be null.");
         this.matcher = matcher;
     }

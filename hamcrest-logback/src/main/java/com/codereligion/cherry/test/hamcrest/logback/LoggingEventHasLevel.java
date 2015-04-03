@@ -37,7 +37,7 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
      * Example usage: {@code assertThat(event, hasLevel(Level.ERROR));}
      * <p/>
      * Example output: {@code Expected: an ILoggingEvent with level: ERROR but: was ILoggingEvent{level=INFO, formattedMessage='some Message',
-     * loggedBy='aLogger', throwable=null}}
+     * loggedBy=SomeLogger, throwable=null}}
      *
      * @param level the level to match the event's log level against
      * @return a new matcher
@@ -49,14 +49,14 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event does not have a log
-     * level equal to the given {@link ch.qos.logback.classic.Level}. This matcher is the negation of {@link LoggingEventHasLevel#hasLevel(Level)}
-     * (Level)}. It is recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)}
-     * because of the improved error output of this matcher.
+     * level equal to the given {@link ch.qos.logback.classic.Level}. This matcher is the negation of {@link LoggingEventHasLevel#hasLevel(Level)} (Level)}. It
+     * is recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)} because of
+     * the improved error output.
      * <p/>
      * Example usage: {@code assertThat(event, doesNotHaveLevel(Level.ERROR));}
      * <p/>
      * Example output: {@code Expected: an ILoggingEvent with level other than: ERROR but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
-     * loggedBy='aLogger', throwable=null}}
+     * loggedBy=SomeLogger, throwable=null}}
      *
      * @param level the level to match the event's log level against
      * @return a new matcher
@@ -73,8 +73,8 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
      * <p/>
      * Example usage: {@code assertThat(events, hasItem(withLevel(Level.ERROR)));}
      * <p/>
-     * Example output: {@code Expected: an iterable containing an ILoggingEvent with level: ERROR but: iterable contained ILoggingEvent{level=INFO,
-     * formattedMessage='some Message', loggedBy='aLogger', throwable=null}}
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with level: ERROR but: iterable contained [ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
      *
      * @param level the level to match the event's log level against
      * @return a new matcher
