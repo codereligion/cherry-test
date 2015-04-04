@@ -19,6 +19,11 @@ import ch.qos.logback.core.AppenderBase;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * In-memory list appender.
+ *
+ * @param <E> the type of the event
+ */
 class ListAppender<E> extends AppenderBase<E> {
 
     private List<E> list = new ArrayList<E>();
@@ -28,6 +33,9 @@ class ListAppender<E> extends AppenderBase<E> {
         list.add(e);
     }
 
+    /**
+     * @return a list holding all events in the order they were received
+     */
     public List<E> getList() {
         return list;
     }
