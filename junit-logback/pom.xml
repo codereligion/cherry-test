@@ -13,18 +13,12 @@
 
     <artifactId>codereligion-cherry-junit-logback</artifactId>
 
-
     <dependencies>
         <!-- compile -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.classic.version}</version>
         </dependency>
 
         <!-- test -->
@@ -35,5 +29,48 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>normal</id>
+            <activation>
+                <property>
+                    <name>android</name>
+                    <value>false</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                    <version>${logback.classic.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>android</id>
+            <activation>
+                <property>
+                    <name>android</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <finalName>${artifactId}-${version}-android</finalName>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.github.tony19</groupId>
+                    <artifactId>logback-android-classic</artifactId>
+                    <version>${logback.andoird.classic.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                    <version>${slf4j.api.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>

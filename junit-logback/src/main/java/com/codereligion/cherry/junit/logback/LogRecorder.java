@@ -18,7 +18,6 @@ package com.codereligion.cherry.junit.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.util.Collections;
@@ -31,9 +30,8 @@ import org.junit.runners.model.Statement;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * JUnit rule which adds a {@link ch.qos.logback.core.read.ListAppender} to the loggers specified by the given {@link
- * com.codereligion.cherry.junit.logback.LogSpec} in order to record emitted events. The given {@code logSpec} also specifies the appender's log level. The
- * appender will be removed after the test execution.
+ * JUnit rule which records all events emitted by the loggers specified in the given {@link com.codereligion.cherry.junit.logback.LogSpec} at the specified log
+ * level.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
@@ -83,7 +81,7 @@ public class LogRecorder implements TestRule {
      * @return all recorded events
      */
     public List<ILoggingEvent> events() {
-        return listAppender.list;
+        return listAppender.getList();
     }
 
     /**
@@ -93,11 +91,11 @@ public class LogRecorder implements TestRule {
      * @throws java.lang.AssertionError when no event was recorded
      */
     public ILoggingEvent event() {
-        if (listAppender.list.isEmpty()) {
+        if (listAppender.getList().isEmpty()) {
             throw new AssertionError("No event was recorded during the test execution.");
         }
 
-        return listAppender.list.get(0);
+        return listAppender.getList().get(0);
     }
 
     private void before() throws Throwable {

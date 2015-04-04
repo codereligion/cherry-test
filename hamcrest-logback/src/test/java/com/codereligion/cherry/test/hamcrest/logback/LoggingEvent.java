@@ -99,6 +99,7 @@ public class LoggingEvent implements ILoggingEvent {
     }
 
     @Override
+    @Deprecated
     public Map<String, String> getMdc() {
         return null;
     }
