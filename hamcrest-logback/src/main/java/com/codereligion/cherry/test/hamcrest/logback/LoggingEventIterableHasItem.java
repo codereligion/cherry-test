@@ -19,6 +19,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * A matcher which expects at least one item of an iterable of {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} to match the given {@link
@@ -59,17 +60,18 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
      *
      * @param itemMatcher the logging event {@link Matcher} to check the items with
      * @return a new matcher
-     * @throws java.lang.IllegalArgumentException when the given parameter is {@code null}
+     * @throws java.lang.IllegalArgumentException when the given {@code itemMatcher} is {@code null}
      */
     public static Matcher<Iterable<ILoggingEvent>> hasNoItem(final Matcher<ILoggingEvent> itemMatcher) {
         return new LoggingEventIterableHasItem(itemMatcher, true);
     }
 
-    private final Matcher<ILoggingEvent> elementMatcher;
+    private final Matcher<ILoggingEvent> itemMatcher;
     private final boolean negated;
 
-    private LoggingEventIterableHasItem(final Matcher<ILoggingEvent> elementMatcher, final boolean negated) {
-        this.elementMatcher = elementMatcher;
+    private LoggingEventIterableHasItem(final Matcher<ILoggingEvent> itemMatcher, final boolean negated) {
+        checkArgument(itemMatcher != null, "itemMatcher must not be null.");
+        this.itemMatcher = itemMatcher;
         this.negated = negated;
     }
 
@@ -90,13 +92,13 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
         mismatchDescription.appendText("[");
         boolean isPastFirst = false;
         for (final Object item : collection) {
-            if (elementMatcher.matches(item)) {
+            if (itemMatcher.matches(item)) {
                 return true;
             }
             if (isPastFirst) {
                 mismatchDescription.appendText(", ");
             }
-            elementMatcher.describeMismatch(item, mismatchDescription);
+            itemMatcher.describeMismatch(item, mismatchDescription);
             isPastFirst = true;
         }
 
@@ -106,8 +108,8 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
 
     private boolean negativeMatches(final Iterable<ILoggingEvent> collection, final Description mismatchDescription) {
         for (final Object item : collection) {
-            if (elementMatcher.matches(item)) {
-                elementMatcher.describeMismatch(item, mismatchDescription);
+            if (itemMatcher.matches(item)) {
+                itemMatcher.describeMismatch(item, mismatchDescription);
                 return false;
             }
         }
@@ -121,6 +123,6 @@ public class LoggingEventIterableHasItem extends TypeSafeDiagnosingMatcher<Itera
         } else {
             description.appendText("an iterable containing ");
         }
-        description.appendDescriptionOf(elementMatcher);
+        description.appendDescriptionOf(itemMatcher);
     }
 }

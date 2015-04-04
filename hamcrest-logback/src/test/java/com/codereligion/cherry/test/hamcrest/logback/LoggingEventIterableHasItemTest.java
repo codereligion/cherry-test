@@ -19,6 +19,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.google.common.collect.Lists;
 import java.util.List;
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -37,6 +38,34 @@ public class LoggingEventIterableHasItemTest {
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void hasItemThrowsIllegalArgumentExceptionOnNullValue() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("itemMatcher must not be null.");
+
+        // given
+        final Matcher<ILoggingEvent> matcher = null;
+
+        // when
+        hasItem(matcher);
+    }
+
+    @Test
+    public void hasNoItemThrowsIllegalArgumentExceptionOnNullValue() {
+
+        // expect
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("itemMatcher must not be null.");
+
+        // given
+        final Matcher<ILoggingEvent> matcher = null;
+
+        // when
+        hasNoItem(matcher);
+    }
 
     @Test
     public void hasItemMatchesWhenAtLeastOneItemMatches() {
