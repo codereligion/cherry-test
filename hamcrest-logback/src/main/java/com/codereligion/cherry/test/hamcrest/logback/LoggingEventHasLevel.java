@@ -22,7 +22,7 @@ import org.hamcrest.Matcher;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to be of the specified {@code level}.
+ * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to have a specific {@link Level}.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
@@ -31,7 +31,7 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a log level equal
-     * to the given {@link ch.qos.logback.classic.Level}. This matcher is doing the same assertion as {@link LoggingEventHasLevel#withLevel(Level)} (Level)},
+     * to the given {@link ch.qos.logback.classic.Level}. This matcher is doing the same assertion as {@link LoggingEventHasLevel#withLevel(Level)},
      * with the difference that this matcher's output is optimized for usage on single events.
      * <p/>
      * Example usage: {@code assertThat(event, hasLevel(Level.ERROR));}
@@ -49,7 +49,7 @@ public class LoggingEventHasLevel extends AbstractILoggingEventDescribingMatcher
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event does not have a log
-     * level equal to the given {@link ch.qos.logback.classic.Level}. This matcher is the negation of {@link LoggingEventHasLevel#hasLevel(Level)} (Level)}. It
+     * level equal to the given {@link ch.qos.logback.classic.Level}. This matcher is the negation of {@link LoggingEventHasLevel#hasLevel(Level)}. It
      * is recommended to use this specific matcher instead of just combining the other matcher with {@link org.hamcrest.CoreMatchers#not(Matcher)} because of
      * the improved error output.
      * <p/>

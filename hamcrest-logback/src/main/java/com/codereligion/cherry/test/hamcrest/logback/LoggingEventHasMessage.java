@@ -73,8 +73,8 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      * <p/>
      * Example usage: {@code assertThat(events, hasItem(withMessage(containsString("ohoh"))));}
      * <p/>
-     * Example output: {@code Expected: an iterable containing an ILoggingEvent with level: ERROR but: iterable contained [ILoggingEvent{level=INFO,
-     * formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with a formattedMessage matching: a string containing "ohoh" but: iterable
+     * contained [ILoggingEvent{level=INFO, formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
      *
      * @param matcher the string {@link Matcher} to check the {@code formattedMessage} against
      * @return a new matcher

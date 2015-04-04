@@ -25,8 +25,11 @@ import org.hamcrest.Matcher;
 /**
  * A matcher which expects the {@link ch.qos.logback.classic.spi.ILoggingEvent} to contain the specified {@link Throwable}.
  * <p/>
- * This matcher returns true when: <li> <ul>the given throwable is {@code null} and the logging event does not have an associated throwable</ul> <ul>the given
- * throwable matches in class and message the throwable which is associated with the logging event</ul> </li>
+ * This matcher returns true when:
+ * <ul>
+ *     <li>the given throwable is {@code null} and the logging event does not have an associated throwable</li>
+ *     <li>the given throwable matches in class and message the throwable which is associated with the logging event</li>
+ * </ul>
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
@@ -43,7 +46,7 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
      * Example output: {@code Expected: an ILoggingEvent with a throwable matching: java.lang.NullPointerException{message='opsi!'} but: was
      * ILoggingEvent{level=ERROR, formattedMessage='some Message', loggedBy=SomeLogger, throwable=java.lang.NullPointerException{message='nope!'}}}
      *
-     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @param throwable the throwable to match the event's associated throwable with
      * @return a new matcher
      */
     public static Matcher<ILoggingEvent> hasThrowable(final Throwable throwable) {
@@ -61,7 +64,7 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
      * Example output: {@code Expected: an ILoggingEvent with a throwable not matching: java.lang.NullPointerException{message='ohoh'} but: was
      * ILoggingEvent{level=ERROR, formattedMessage='some message', loggedBy=SomeLogger, throwable=java.lang.NullPointerException{message='ohoh'}}}
      *
-     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @param throwable the throwable to match the event's associated throwable with
      * @return a new matcher
      */
     public static Matcher<ILoggingEvent> doesNotHaveThrowable(final Throwable throwable) {
@@ -78,7 +81,7 @@ public class LoggingEventHasThrowable extends AbstractILoggingEventDescribingMat
      * Example output: {@code Expected: an iterable containing an ILoggingEvent with a throwable matching: java.lang.NullPointerException{message='ohoh'} but:
      * iterable contained [ILoggingEvent{level=INFO, formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
      *
-     * @param throwable the throwable to match the event's {@code throwableProxy} with
+     * @param throwable the throwable to match the event's associated throwable with
      * @return a new matcher
      */
     public static Matcher<ILoggingEvent> withThrowable(final Throwable throwable) {

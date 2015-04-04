@@ -31,8 +31,9 @@ import org.junit.runners.model.Statement;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * JUnit rule which temporarily adds a {@link ch.qos.logback.core.read.ListAppender} to the loggers specified by the given {@link
- * com.codereligion.cherry.junit.logback.LogSpec}.
+ * JUnit rule which adds a {@link ch.qos.logback.core.read.ListAppender} to the loggers specified by the given {@link
+ * com.codereligion.cherry.junit.logback.LogSpec} in order to record emitted events. The given {@code logSpec} also specifies the appender's log level. The
+ * appender will be removed after the test execution.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015

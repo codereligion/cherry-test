@@ -35,7 +35,7 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * <p/>
      * Example usage: {@code assertThat(event, wasLoggedBy("SomeLogger"));}
      * <p/>
-     * Example output: {@code Expected: an ILoggingEvent logged by: someLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * Example output: {@code Expected: an ILoggingEvent logged by: SomeLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
      * loggedBy=SomeOtherLogger, throwable=null}}
      *
      * @param loggerName the name of the loggerName to match the event's logger with
@@ -54,8 +54,8 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * <p/>
      * Example usage: {@code assertThat(event, wasNotLoggedBy("SomeLogger"));}
      * <p/>
-     * Example output: {@code Expected: an ILoggingEvent logged by: SomeLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
-     * loggedBy=SomeOtherLogger, throwable=null}}
+     * Example output: {@code Expected: an ILoggingEvent not logged by: SomeLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * loggedBy=SomeLogger, throwable=null}}
      *
      * @param loggerName the name of the loggerName to match the event's logger with
      * @return a new matcher
@@ -109,7 +109,7 @@ public class LoggingEventLoggedBy extends AbstractILoggingEventDescribingMatcher
      * <p/>
      * Example usage: {@code assertThat(event, wasNotLoggedBy(SomeType.class));}
      * <p/>
-     * Example output: {@code Expected: an ILoggingEvent not logged by: SomeLogger but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
+     * Example output: {@code Expected: an ILoggingEvent not logged by: SomeType but: was ILoggingEvent{level=ERROR, formattedMessage='some Message',
      * loggedBy=SomeType, throwable=null}}
      *
      * @param loggerType the {@link java.lang.Class} of which the name will be used to match the event's logger with

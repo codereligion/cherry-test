@@ -22,13 +22,13 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
- * Abstract {@link TypeSafeMatcher} which ensures better descriptions of expectations for regular matchers, negatable matchers and matchers used in conjunction
+ * Abstract {@link TypeSafeMatcher} which ensures better descriptions of expectations for regular matchers, negated matchers and matchers used in conjunction
  * with iterable matchers.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 18.03.2015
  */
-public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMatcher<ILoggingEvent> {
+abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMatcher<ILoggingEvent> {
 
     private final boolean negated;
     private final boolean usedOnIterable;
@@ -39,7 +39,7 @@ public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMat
      * @param negated if the matcher is negated
      * @param usedOnIterable if the matcher is used in conjunction with an iterable matcher
      */
-    public AbstractILoggingEventDescribingMatcher(final boolean negated, final boolean usedOnIterable) {
+    AbstractILoggingEventDescribingMatcher(final boolean negated, final boolean usedOnIterable) {
         this.negated = negated;
         this.usedOnIterable = usedOnIterable;
     }
@@ -59,7 +59,7 @@ public abstract class AbstractILoggingEventDescribingMatcher extends TypeSafeMat
     }
 
     /**
-     * This method must return true when the given {@code event} matches. Proper negation in cases of a negation is handled by the caller of this method.
+     * This method must return true when the given {@code event} matches. Proper negation is handled by the caller of this method.
      *
      * @param event the {@link ILoggingEvent} to be checked
      * @return {@code true} if the event matches

@@ -24,8 +24,8 @@ import org.junit.runners.model.Statement;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * JUnit rule which allows to manipulate the time returned by various {@link org.joda.time.DateTimeUtils} methods and which will reset the time to the system
- * time after test execution.
+ * JUnit rule which allows to manipulate the current time returned by various joda time methods and which will reset the time to the system time after test
+ * execution.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 17.03.2015
