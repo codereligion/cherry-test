@@ -1,6 +1,6 @@
 # ![cherry-logo](https://raw.githubusercontent.com/codereligion/cherry/master/small-cherry.png) Hamcrest Logback for Android [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codereligion/codereligion-cherry-hamcrest-logback-android/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/com.codereligion/codereligion-cherry-hamcrest-logback-android)
 
-This module contains Hamcrest matchers for the [android port of logback](https://github.com/tony19/logback-android). There are matchers for the following logging event properties:
+This module contains Hamcrest matchers for the [android port of logback](https://github.com/tony19/logback-android) which works tightly together with [junit-logback-android](https://github.com/codereligion/cherry-test/tree/master/junit-logback-android). There are matchers for the following logging event properties:
 
 * log level (```LoggingEventHasLevel```)
 * message (```LoggingEventHasMessage```)
