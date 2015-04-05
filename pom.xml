@@ -22,6 +22,7 @@
         <module>junit-logback-android</module>
         <module>hamcrest-logback</module>
         <module>hamcrest-logback-android</module>
+        <module>hamcrest</module>
     </modules>
 
 
