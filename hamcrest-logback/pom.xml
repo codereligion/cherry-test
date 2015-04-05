@@ -25,6 +25,11 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.classic.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.codereligion</groupId>
+            <artifactId>codereligion-cherry-hamcrest</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
 
         <!-- test -->
         <dependency>

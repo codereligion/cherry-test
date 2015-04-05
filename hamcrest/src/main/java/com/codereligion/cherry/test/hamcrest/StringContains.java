@@ -35,8 +35,8 @@ public class StringContains extends SubstringMatcher {
      * Example usage: {@code assertThat("myStringOfNote", containsString("ring"))}
      *
      * @param substring the substring that the returned matcher will expect to find within any examined string
-     * @param args
-     * @return
+     * @param args the arguments to use for formatting the given {@code substring}
+     * @return a new matcher
      */
     public static Matcher<String> containsString(final String substring, final Object... args) {
         checkArgument(substring != null, "substring must not be null.");

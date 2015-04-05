@@ -18,6 +18,7 @@ package com.codereligion.cherry.test.hamcrest.logback;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import static com.codereligion.cherry.test.hamcrest.StringContains.containsString;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -28,6 +29,25 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @since 17.03.2015
  */
 public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatcher {
+
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
+     * formattedMessage} which contains the given {@code substring}. This matcher is doing the same assertion as {@link
+     * LoggingEventHasMessage#withMessage(String, Object...)}, with the difference that this matcher's output is optimized for usage on single events.
+     * <p/>
+     * Example usage: {@code assertThat(event, hasMessage("oh %s", "no!"));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with a formattedMessage matching: a string containing "oh no!" but: was ILoggingEvent{level=INFO,
+     * formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}}
+     *
+     * @param substring the which is expected to be contained in the given events {@code formattedMessage}
+     * @param args the arguments to use for formatting the given {@code substring}
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given substring is {@code null}
+     */
+    public static Matcher<ILoggingEvent> hasMessage(final String substring, final Object... args) {
+        return hasMessage(containsString(substring, args));
+    }
 
     /**
      * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
@@ -45,6 +65,26 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      */
     public static Matcher<ILoggingEvent> hasMessage(final Matcher<String> matcher) {
         return new LoggingEventHasMessage(matcher, false, false);
+    }
+
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event does not have a
+     * {@code formattedMessage} which contains the given {@code substring}. This matcher is the negation of {@link LoggingEventHasMessage#hasMessage(String,
+     * Object...)}. It is recommended to use this specific matcher instead of just combining the other matcher with {@link
+     * org.hamcrest.CoreMatchers#not(Matcher)} because of the improved error output.
+     * <p/>
+     * Example usage: {@code assertThat(event, doesNotHaveMessage("oh %s", "no!"));}
+     * <p/>
+     * Example output: {@code Expected: an ILoggingEvent with a formattedMessage not matching: a string containing "oh no!" but: was ILoggingEvent{level=ERROR,
+     * formattedMessage='ohoh', loggedBy=SomeLogger, throwable=null}}
+     *
+     * @param substring the which is expected to be contained in the given events {@code formattedMessage}
+     * @param args the arguments to use for formatting the given {@code substring}
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given substring is {@code null}
+     */
+    public static Matcher<ILoggingEvent> doesNotHaveMessage(final String substring, final Object... args) {
+        return doesNotHaveMessage(containsString(substring, args));
     }
 
     /**
@@ -74,6 +114,25 @@ public class LoggingEventHasMessage extends AbstractILoggingEventDescribingMatch
      * Example usage: {@code assertThat(events, hasItem(withMessage(containsString("ohoh"))));}
      * <p/>
      * Example output: {@code Expected: an iterable containing an ILoggingEvent with a formattedMessage matching: a string containing "ohoh" but: iterable
+     * contained [ILoggingEvent{level=INFO, formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
+     *
+     * @param substring the which is expected to be contained in the given events {@code formattedMessage}
+     * @param args the arguments to use for formatting the given {@code substring}
+     * @return a new matcher
+     * @throws java.lang.IllegalArgumentException when the given substring is {@code null}
+     */
+    public static Matcher<ILoggingEvent> withMessage(final String substring, final Object... args) {
+        return withMessage(containsString(substring, args));
+    }
+
+    /**
+     * Creates a new matcher for {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvents} that only matches when the examined event has a {@code
+     * formattedMessage} which contains the given {@code substring}. This matcher is doing the same assertion as {@link
+     * LoggingEventHasMessage#hasMessage(String, Object...)}, with the difference that this matcher's output is optimized for usage on iterables of events.
+     * <p/>
+     * Example usage: {@code assertThat(events, hasItem(withMessage("oh %s", "no!")));}
+     * <p/>
+     * Example output: {@code Expected: an iterable containing an ILoggingEvent with a formattedMessage matching: a string containing "oh no!" but: iterable
      * contained [ILoggingEvent{level=INFO, formattedMessage='some Message', loggedBy=SomeLogger, throwable=null}]}
      *
      * @param matcher the string {@link Matcher} to check the {@code formattedMessage} against

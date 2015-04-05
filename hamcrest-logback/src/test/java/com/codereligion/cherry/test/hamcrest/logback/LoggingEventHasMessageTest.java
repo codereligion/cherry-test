@@ -22,7 +22,6 @@ import org.junit.rules.ExpectedException;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.doesNotHaveMessage;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.hasMessage;
 import static com.codereligion.cherry.test.hamcrest.logback.LoggingEventHasMessage.withMessage;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -85,7 +84,7 @@ public class LoggingEventHasMessageTest {
         final LoggingEvent loggingEvent = new LoggingEvent().withMessage("foo");
 
         // then
-        assertThat(loggingEvent, hasMessage(containsString("foo")));
+        assertThat(loggingEvent, hasMessage("foo"));
     }
 
     @Test
@@ -100,7 +99,7 @@ public class LoggingEventHasMessageTest {
         final LoggingEvent loggingEvent = new LoggingEvent().withMessage("bar");
 
         // then
-        assertThat(loggingEvent, hasMessage(containsString("foo")));
+        assertThat(loggingEvent, hasMessage("foo"));
     }
 
     @Test
@@ -110,7 +109,7 @@ public class LoggingEventHasMessageTest {
         final LoggingEvent loggingEvent = new LoggingEvent().withMessage("foo");
 
         // then
-        assertThat(loggingEvent, withMessage(containsString("foo")));
+        assertThat(loggingEvent, withMessage("foo"));
     }
 
     @Test
@@ -125,7 +124,7 @@ public class LoggingEventHasMessageTest {
         final LoggingEvent loggingEvent = new LoggingEvent().withMessage("bar");
 
         // then
-        assertThat(loggingEvent, withMessage(containsString("foo")));
+        assertThat(loggingEvent, withMessage("foo"));
     }
 
     @Test
@@ -135,7 +134,7 @@ public class LoggingEventHasMessageTest {
         final LoggingEvent loggingEvent = new LoggingEvent().withMessage("foo");
 
         // then
-        assertThat(loggingEvent, doesNotHaveMessage(containsString("bar")));
+        assertThat(loggingEvent, doesNotHaveMessage("bar"));
     }
 
     @Test
@@ -150,6 +149,6 @@ public class LoggingEventHasMessageTest {
         final LoggingEvent loggingEvent = new LoggingEvent().withMessage("bar");
 
         // then
-        assertThat(loggingEvent, doesNotHaveMessage(containsString("bar")));
+        assertThat(loggingEvent, doesNotHaveMessage("bar"));
     }
 }
