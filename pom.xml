@@ -12,7 +12,7 @@
     <groupId>com.codereligion</groupId>
     <artifactId>codereligion-cherry-test</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <modules>
         <module>hamcrest</module>
@@ -39,7 +39,7 @@
         <url>scm:git:ssh://git@github.com:codereligion/cherry-test.git</url>
         <connection>scm:git:ssh://git@github.com:codereligion/cherry-test.git</connection>
         <developerConnection>scm:git:git@github.com:codereligion/cherry-test.git</developerConnection>
-        <tag>codereligion-cherry-test-1.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
