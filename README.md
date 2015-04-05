@@ -6,7 +6,7 @@ This is a multi-module library which is part of the [cherry project](https://git
 * Java 1.6 or higher
 
 ## Usage
-For usages and maven central links see respective READMEs:
+For usages and maven central links see:
 * [hamcrest](https://github.com/codereligion/cherry-test/blob/master/hamcrest/)
 * [hamcrest-logback](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback/)
 * [hamcrest-logback-android](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback-android/)
