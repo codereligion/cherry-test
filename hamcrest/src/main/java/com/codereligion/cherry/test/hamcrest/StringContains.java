@@ -20,8 +20,8 @@ import org.hamcrest.core.SubstringMatcher;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * A matcher which expects a string to contain a given string. This matcher basically does the same as {@link org.hamcrest.core.StringContains}, with the
- * difference that it allows varargs which will be used to format the given string before the actual matching happens.
+ * A matcher which expects a string to contain a given string. This matcher basically does the same as Hamcrest's {@link org.hamcrest.core.StringContains}, with
+ * the difference that it allows varargs which will be used to format the given string before the actual matching happens.
  *
  * @author Sebastian Gr&ouml;bler
  * @since 05.04.2015
@@ -32,10 +32,10 @@ public class StringContains extends SubstringMatcher {
      * Creates a matcher that matches if the examined {@link String} contains the specified {@link String} anywhere. Optional arguments can be provided which
      * will be used to format the given {@code substring}.
      * <p/>
-     * Example usage: {@code assertThat("myStringOfNote", containsString("ring"))}
+     * Example usage: {@code assertThat("some string", containsString("some %s", "string"))}
      *
      * @param substring the substring that the returned matcher will expect to find within any examined string
-     * @param args the arguments to use for formatting the given {@code substring}
+     * @param args      the arguments to use for formatting the given {@code substring}
      * @return a new matcher
      */
     public static Matcher<String> containsString(final String substring, final Object... args) {
