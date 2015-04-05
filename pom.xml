@@ -82,7 +82,6 @@
         <mockito.core.version>1.10.19</mockito.core.version>
 
         <!-- ci properties -->
-        <android>false</android>
         <jacoco.version>0.6.2.201302030002</jacoco.version>
         <skip.code.coverage>true</skip.code.coverage>
 
