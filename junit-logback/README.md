@@ -4,8 +4,6 @@ This module contains a JUnit rule to record logback logging events and it works 
 
 ## Usage
 ```java
-...
-
 @Rule
 public LogRecorder logRecorder = LogRecorder.expectedLogs(new LogSpec(SomeType.class, Level.ERROR));
 
