@@ -1,6 +1,6 @@
 # ![cherry-logo](https://raw.githubusercontent.com/codereligion/cherry/master/small-cherry.png) Hamcrest Logback [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.codereligion/codereligion-cherry-hamcrest-logback/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/com.codereligion/codereligion-cherry-hamcrest-logback)
 
-This module contains Hamcrest matchers for logback. There are matchers for the following logging event properties:
+This module contains Hamcrest matchers for logback which works tightly together with [junit-logback](https://github.com/codereligion/cherry-test/tree/master/junit-logback). There are matchers for the following logging event properties:
 
 * log level (```LoggingEventHasLevel```)
 * message (```LoggingEventHasMessage```)
