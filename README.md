@@ -7,12 +7,12 @@ This is a multi-module library which is part of the [cherry project](https://git
 
 ## Usage
 For usages and maven central links see respective READMEs:
-* [hamcrest](https://github.com/codereligion/cherry-test/blob/master/hamcrest/README.md)
-* [hamcrest-logback](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback/README.md)
-* [hamcrest-logback-android](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback-android/README.md)
-* [junit-logback](https://github.com/codereligion/cherry-test/blob/master/junit-logback/README.md)
-* [junit-logback-android](https://github.com/codereligion/cherry-test/blob/master/junit-logback-android/README.md)
-* [junit-joda-time](https://github.com/codereligion/cherry-test/blob/master/junit-joda-time/README.md)
+* [hamcrest](https://github.com/codereligion/cherry-test/blob/master/hamcrest/)
+* [hamcrest-logback](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback/)
+* [hamcrest-logback-android](https://github.com/codereligion/cherry-test/blob/master/hamcrest-logback-android/)
+* [junit-logback](https://github.com/codereligion/cherry-test/blob/master/junit-logback/)
+* [junit-logback-android](https://github.com/codereligion/cherry-test/blob/master/junit-logback-android/)
+* [junit-joda-time](https://github.com/codereligion/cherry-test/blob/master/junit-joda-time/)
 
 ## Attributions
 The cherry icon originated from www.vector4free.com and is distributed under the [Creative Commons 4.0 License](http://creativecommons.org/licenses/by/4.0/)
